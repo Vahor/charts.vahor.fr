@@ -3,6 +3,8 @@
 import { useChartStore } from "@/app/(main)/chart.store";
 import {
 	ChartContainer,
+	ChartLegend,
+	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/chart";
@@ -24,6 +26,8 @@ const colorBrewerPalette = [
 export function PieChart() {
 	const chartData = useChartStore((state) => state.chartData);
 	const chartConfig = useChartStore((state) => state.chartConfig);
+	const showGrid = useChartStore((state) => state.showGrid);
+	const showLegend = useChartStore((state) => state.showLegend);
 
 	const dataWithFill = chartData.map((data, index) => {
 		return {
@@ -39,6 +43,7 @@ export function PieChart() {
 					cursor={false}
 					content={<ChartTooltipContent indicator="line" />}
 				/>
+				{showLegend && <ChartLegend content={<ChartLegendContent />} />}
 
 				<Pie
 					data={dataWithFill}
@@ -46,38 +51,40 @@ export function PieChart() {
 					dataKey="desktop"
 					nameKey="month"
 					isAnimationActive={false}
-					innerRadius={60}
+					innerRadius={showGrid ? 60 : 0}
 					strokeWidth={5}
 				>
-					<Label
-						content={({ viewBox }) => {
-							if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-								return (
-									<text
-										x={viewBox.cx}
-										y={viewBox.cy}
-										textAnchor="middle"
-										dominantBaseline="middle"
-									>
-										<tspan
+					{showGrid && (
+						<Label
+							content={({ viewBox }) => {
+								if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+									return (
+										<text
 											x={viewBox.cx}
 											y={viewBox.cy}
-											className="fill-foreground text-3xl font-bold"
+											textAnchor="middle"
+											dominantBaseline="middle"
 										>
-											text
-										</tspan>
-										<tspan
-											x={viewBox.cx}
-											y={(viewBox.cy || 0) + 24}
-											className="fill-muted-foreground"
-										>
-											Visitors
-										</tspan>
-									</text>
-								);
-							}
-						}}
-					/>
+											<tspan
+												x={viewBox.cx}
+												y={viewBox.cy}
+												className="fill-foreground font-bold text-3xl"
+											>
+												text
+											</tspan>
+											<tspan
+												x={viewBox.cx}
+												y={(viewBox.cy || 0) + 24}
+												className="fill-muted-foreground"
+											>
+												Visitors
+											</tspan>
+										</text>
+									);
+								}
+							}}
+						/>
+					)}
 				</Pie>
 			</RechartsPieChart>
 		</ChartContainer>

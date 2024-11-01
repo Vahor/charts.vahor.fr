@@ -1,16 +1,20 @@
-import { ChartTitle } from "@/app/(main)/components/chart/chart-title";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
+"use client";
+
+import { useChartStore } from "@/app/(main)/chart.store";
+import { ChartHeader } from "@/app/(main)/components/chart/chart-header";
+import { Card, CardContent } from "@/components/card";
+import { cn } from "@/lib/utils";
 
 export const ChartWrapper: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
+	const lightMode = useChartStore((state) => state.lightMode);
+
 	return (
-		<div className="absolute top-1/2 pb-32 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-screen-md xl:max-w-screen-lg ">
-			<div id="chart-wrapper" className="p-8">
+		<div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full max-w-screen-md pb-32 xl:max-w-screen-lg ">
+			<div id="chart-wrapper" className={cn("p-8", lightMode && "light")}>
 				<Card>
-					<CardHeader>
-						<ChartTitle />
-					</CardHeader>
+					<ChartHeader />
 					<CardContent>{children}</CardContent>
 				</Card>
 			</div>

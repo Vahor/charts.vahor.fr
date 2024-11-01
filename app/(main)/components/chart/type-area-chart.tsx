@@ -1,10 +1,10 @@
 "use client";
 
 import {
+	Area,
 	CartesianGrid,
 	LabelList,
-	Line,
-	LineChart as RechartsLineChart,
+	AreaChart as RechartsAreaChart,
 	XAxis,
 } from "recharts";
 
@@ -16,7 +16,7 @@ import {
 } from "@/components/chart";
 import { ChartTooltip, ChartTooltipContent } from "@/components/chart";
 
-export function LineChart() {
+export function AreaChart() {
 	const chartData = useChartStore((state) => state.chartData);
 	const chartConfig = useChartStore((state) => state.chartConfig);
 
@@ -27,7 +27,7 @@ export function LineChart() {
 
 	return (
 		<ChartContainer config={chartConfig}>
-			<RechartsLineChart data={chartData}>
+			<RechartsAreaChart data={chartData}>
 				{showGrid && <CartesianGrid vertical={false} />}
 				<XAxis
 					dataKey="month"
@@ -42,7 +42,7 @@ export function LineChart() {
 				/>
 				{showLegend && <ChartLegend content={<ChartLegendContent />} />}
 
-				<Line
+				<Area
 					dataKey="desktop"
 					type={lineChartType}
 					stroke="var(--color-desktop)"
@@ -51,7 +51,7 @@ export function LineChart() {
 					radius={4}
 					dot={showDots}
 				/>
-				<Line
+				<Area
 					dataKey="mobile"
 					type={lineChartType}
 					stroke="var(--color-mobile)"
@@ -66,7 +66,7 @@ export function LineChart() {
 					className="fill-foreground"
 					fontSize={12}
 				/>
-			</RechartsLineChart>
+			</RechartsAreaChart>
 		</ChartContainer>
 	);
 }
