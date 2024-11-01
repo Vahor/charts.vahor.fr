@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { BASE_URL } from "@/lib/constants";
@@ -43,16 +43,22 @@ export const metadata: Metadata = {
 	keywords: "charts, image, convert, csv, json",
 };
 
+export const viewport: Viewport = {
+	themeColor: "#1e1e2e",
+	colorScheme: "dark",
+};
+
 export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
+				<div className="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
 				{children}
 			</body>
 		</html>
