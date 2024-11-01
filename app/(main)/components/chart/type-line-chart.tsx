@@ -3,11 +3,8 @@
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import { useChartStore } from "@/app/(main)/chart.store";
-import {
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "@/components/chart";
+import { ChartTooltip } from "@/app/(main)/components/chart/chart-tooltip";
+import { ChartContainer } from "@/components/chart";
 
 export function LineChart() {
 	const chartData = useChartStore((state) => state.chartData);
@@ -23,10 +20,7 @@ export function LineChart() {
 					tickMargin={8}
 					tickFormatter={(value) => value.slice(0, 3)}
 				/>
-				<ChartTooltip
-					cursor={false}
-					content={<ChartTooltipContent indicator="line" />}
-				/>
+				<ChartTooltip />
 				<Area
 					dataKey="desktop"
 					stroke="var(--color-desktop)"

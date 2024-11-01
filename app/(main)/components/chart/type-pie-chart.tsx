@@ -1,11 +1,8 @@
 "use client";
 
 import { useChartStore } from "@/app/(main)/chart.store";
-import {
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "@/components/chart";
+import { ChartTooltip } from "@/app/(main)/components/chart/chart-tooltip";
+import { ChartContainer } from "@/components/chart";
 import { Label, Pie, PieChart as RechartsPieChart } from "recharts";
 
 const colorBrewerPalette = [
@@ -35,10 +32,7 @@ export function PieChart() {
 	return (
 		<ChartContainer config={chartConfig}>
 			<RechartsPieChart>
-				<ChartTooltip
-					cursor={false}
-					content={<ChartTooltipContent indicator="line" />}
-				/>
+				<ChartTooltip />
 				<Pie
 					data={dataWithFill}
 					labelLine={false}
