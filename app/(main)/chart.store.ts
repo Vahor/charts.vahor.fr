@@ -22,11 +22,6 @@ export type ChartStore = {
 	legend: boolean;
 	showLegend: (legend: boolean) => void;
 
-	tooltipCoordinates: { x: number; y: number } | null;
-	setTooltipCoordinates: (
-		tooltipCoordinates: { x: number; y: number } | null,
-	) => void;
-
 	// TODO: focus point for tooltip (user can click on chart to focus point)
 };
 
@@ -35,8 +30,7 @@ export const useChartStore = create<ChartStore>()(
 		persist(
 			(set) => ({
 				chartType: "line",
-				setChartType: (chartType) =>
-					set({ chartType, tooltipCoordinates: null }),
+				setChartType: (chartType) => set({ chartType }),
 
 				chartData: [
 					{ month: "January", desktop: 186, mobile: 80 },
@@ -65,10 +59,6 @@ export const useChartStore = create<ChartStore>()(
 
 				legend: true,
 				showLegend: (legend) => set({ legend }),
-
-				tooltipCoordinates: null,
-				setTooltipCoordinates: (tooltipCoordinates) =>
-					set({ tooltipCoordinates }),
 			}),
 			{
 				name: "chart-store",

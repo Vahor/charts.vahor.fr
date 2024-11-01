@@ -1,5 +1,5 @@
 import { ChartTypeDropdown } from "@/app/(main)/components/navigation/chart-type";
-import { ChartTooltipSwitch } from "@/app/(main)/components/navigation/tooltip";
+import { ExportImage } from "@/app/(main)/components/navigation/export-image";
 import { Card } from "@/components/card";
 
 export const Navigation: React.FC = () => {
@@ -8,7 +8,8 @@ export const Navigation: React.FC = () => {
 			<Card>
 				<div className="flex flex-row gap-4 p-4">
 					<ChartTypeDropdown />
-					<ChartTooltipSwitch />
+					<div className="flex-1" />
+					<ExportImage />
 				</div>
 			</Card>
 		</div>
