@@ -4,7 +4,8 @@ import {
 	toSvg as htmlToSvg,
 } from "html-to-image";
 
-const imageFilter = (node: HTMLElement) => !node.dataset?.ignoreInExport;
+const imageFilter = (node: HTMLElement) =>
+	node.dataset?.ignoreInExport !== "true";
 
 const htmlToImageOptions = {
 	filter: imageFilter,

@@ -1,3 +1,4 @@
+import { ChartTitle } from "@/app/(main)/components/chart/chart-title";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
 
 export const ChartWrapper: React.FC<React.PropsWithChildren> = ({
@@ -8,7 +9,7 @@ export const ChartWrapper: React.FC<React.PropsWithChildren> = ({
 			<div id="chart-wrapper" className="p-8">
 				<Card>
 					<CardHeader>
-						<CardTitle>title</CardTitle>
+						<ChartTitle />
 					</CardHeader>
 					<CardContent>{children}</CardContent>
 				</Card>
