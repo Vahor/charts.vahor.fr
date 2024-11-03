@@ -13,6 +13,7 @@ export const Dropzone: React.FC<{
 }> = ({ children }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const setChartData = useChartStore((state) => state.setChartData);
+	const setChartDataPath = useChartStore((state) => state.setChartDataPath);
 
 	const dropzone = useDropzone({
 		maxFiles: 1,
@@ -61,6 +62,12 @@ export const Dropzone: React.FC<{
 					return;
 				}
 
+				// fail if the data is empty
+				if (data.length === 0) {
+					toast.error("Data is empty", { id });
+					return;
+				}
+
 				// make sure that the data is valid
 				// all rows should have the same columns
 				const keysA = Object.keys(data[0]);
@@ -79,6 +86,12 @@ export const Dropzone: React.FC<{
 				}
 
 				setChartData(data);
+				const chartDataPath = keysA.map((key, i) => ({
+					evalPath: `data.${i}`,
+					name: key,
+					position: i,
+				}));
+				setChartDataPath(chartDataPath);
 			} catch (e) {
 				toast.error("Error while uploading file", { id });
 				console.error(e);

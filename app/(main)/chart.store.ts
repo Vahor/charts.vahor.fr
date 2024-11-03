@@ -1,12 +1,19 @@
 "use client";
 
 import type { ChartConfig } from "@/components/chart";
+import { buildSafeEvalFunction } from "@/lib/safe-eval";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 export type LineChartType = "step" | "natural" | "linear";
 export type ChartType = "area" | "line" | "bar" | "pie";
 export type ChartData = Record<string, number | string>[];
+export type ChartDataPath = Array<{
+	evalPath: string;
+	evalPathFunction: (data: ChartData[number]) => string | number | undefined;
+	name: string;
+	position: number;
+}>;
 
 export type ChartStore = {
 	chartType: ChartType;
@@ -20,6 +27,11 @@ export type ChartStore = {
 
 	chartData: ChartData;
 	setChartData: (chartData: ChartStore["chartData"]) => void;
+
+	chartDataPath: ChartDataPath;
+	setChartDataPath: (
+		chartDataPath: Omit<ChartDataPath[number], "evalPathFunction">[],
+	) => void;
 
 	lineChartType: LineChartType;
 	setLineChartType: (lineChartType: ChartStore["lineChartType"]) => void;
@@ -79,6 +91,40 @@ export const useChartStore = create<ChartStore>()(
 					{ month: "June", desktop: 214, mobile: 140 },
 				],
 				setChartData: (chartData) => set({ chartData }),
+
+				chartDataPath: [
+					{
+						evalPath: "data.month.slice(0, 3).toUpperCase()",
+						evalPathFunction: buildSafeEvalFunction(
+							"data.month.slice(0, 3).toUpperCase()",
+						),
+						name: "Month",
+						position: 0,
+					},
+					{
+						evalPath: "data.desktop",
+						evalPathFunction: (data) => data.desktop,
+						name: "Desktop",
+						position: 1,
+					},
+					{
+						evalPath: "data.mobile",
+						evalPathFunction: (data) => data.mobile,
+						name: "Mobile",
+						position: 2,
+					},
+				],
+				setChartDataPath: (chartDataPath) =>
+					set({
+						chartDataPath: chartDataPath
+							.toSorted((a, b) => a.position - b.position)
+							.map(({ name, evalPath, position }) => ({
+								name,
+								evalPath,
+								position,
+								evalPathFunction: buildSafeEvalFunction(evalPath),
+							})),
+					}),
 
 				chartConfig: {
 					desktop: {

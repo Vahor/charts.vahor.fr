@@ -1,7 +1,4 @@
 import { useChartStore } from "@/app/(main)/chart.store";
-import { LineChartCurveType } from "@/app/(main)/components/navigation/type/line-chart-curve-type";
-import { ShowDotsSwitch } from "@/app/(main)/components/navigation/type/show-dots-switch";
-import { Label } from "@/components/label";
 
 import {
 	Table,
@@ -14,26 +11,44 @@ import {
 import { cn } from "@/lib/utils";
 
 export const SidePanelData: React.FC = () => {
+	const chartDataPath = useChartStore((state) => state.chartDataPath);
 	const chartData = useChartStore((state) => state.chartData);
+	const idColumn = chartDataPath[0];
 
 	return (
 		<div className="flex flex-col gap-4 h-full">
 			<Table>
+				<colgroup>
+					{chartDataPath.map(({ name: column }) => (
+						<col key={column} className={cn(column === idColumn.name && "w-[100px]")} />
+					))}
+				</colgroup>
 				<TableHeader>
 					<TableRow>
-						<TableHead className="w-[100px]">Invoice</TableHead>
-						<TableHead>Status</TableHead>
-						<TableHead>Method</TableHead>
-						<TableHead className="text-right">Amount</TableHead>
+						{chartDataPath.map(({ name: column }) => (
+							<TableHead key={column}>
+								{column}
+							</TableHead>
+						))}
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					<TableRow>
-						<TableCell className="font-medium">INV001</TableCell>
-						<TableCell>Paid</TableCell>
-						<TableCell>Credit Card</TableCell>
-						<TableCell className="text-right">$250.00</TableCell>
-					</TableRow>
+					{chartData.slice(0, 50).map((row) => {
+						const id = idColumn.evalPathFunction(row);
+						return (
+							<TableRow key={id}>
+								{chartDataPath.map((column) => {
+									const isId = column.name === idColumn.name;
+									const value = isId ? id : column.evalPathFunction(row);
+									return (
+										<TableCell key={column.name} className={cn(isId && "text-right font-medium")}>
+											{value}
+										</TableCell>
+									);
+								})}
+							</TableRow>
+						);
+					})}
 				</TableBody>
 			</Table>
 		</div>
