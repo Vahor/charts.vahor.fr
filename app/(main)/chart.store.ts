@@ -14,6 +14,9 @@ export type ChartStore = {
 	lightMode: boolean;
 	setLightMode: (lightMode: ChartStore["lightMode"]) => void;
 
+	scale: number;
+	setScale: (scale: ChartStore["scale"]) => void;
+
 	chartData: Record<string, number | string>[];
 	setChartData: (chartData: ChartStore["chartData"]) => void;
 
@@ -38,6 +41,8 @@ export type ChartStore = {
 
 	showHeader: boolean;
 	setShowHeader: (showHeader: ChartStore["showHeader"]) => void;
+	showFooter: boolean;
+	setShowFooter: (showFooter: ChartStore["showFooter"]) => void;
 
 	/** Also used for pie chart to show text inside chart */
 	showGrid: boolean;
@@ -57,6 +62,9 @@ export const useChartStore = create<ChartStore>()(
 			(set) => ({
 				chartType: "line",
 				setChartType: (chartType) => set({ chartType }),
+
+				scale: 1,
+				setScale: (scale) => set({ scale }),
 
 				lightMode: false,
 				setLightMode: (lightMode) => set({ lightMode }),
@@ -98,6 +106,9 @@ export const useChartStore = create<ChartStore>()(
 				showHeader: true,
 				setShowHeader: (showHeader) => set({ showHeader }),
 
+				showFooter: true,
+				setShowFooter: (showFooter) => set({ showFooter }),
+
 				chartTitle: "",
 				setChartTitle: (chartTitle) => set({ chartTitle: chartTitle }),
 				chartDescription: "",
@@ -116,9 +127,16 @@ export const useChartStore = create<ChartStore>()(
 				partialize: (state) => ({
 					chartType: state.chartType,
 					showLegend: state.showLegend,
-					showGrid: state.showGrid,
 					lineChartType: state.lineChartType,
 					showDots: state.showDots,
+					showHeader: state.showHeader,
+					showFooter: state.showFooter,
+					scale: state.scale,
+					showGrid: state.showGrid,
+					chartTitle: state.chartTitle,
+					chartDescription: state.chartDescription,
+					focusStatsTitle: state.focusStatsTitle,
+					focusStatsValue: state.focusStatsValue,
 				}),
 			},
 		),

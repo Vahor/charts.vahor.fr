@@ -9,10 +9,18 @@ export const ChartWrapper: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const lightMode = useChartStore((state) => state.lightMode);
+	const scale = useChartStore((state) => state.scale);
 
 	return (
-		<div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 w-full max-w-screen-md pb-32 xl:max-w-screen-lg ">
-			<div id="chart-wrapper" className={cn("p-8", lightMode && "light")}>
+		<div className="-translate-y-1/2 -translate-x-1/2 absolute top-1/2 left-1/3 w-full max-w-screen-sm xl:max-w-screen-md">
+			<div
+				id="chart-wrapper"
+				className={cn(
+					lightMode && "light",
+					"transition-transform duration-75 will-change-transform",
+				)}
+				style={{ transform: `scale(${scale})` }}
+			>
 				<Card>
 					<ChartHeader />
 					<CardContent>{children}</CardContent>

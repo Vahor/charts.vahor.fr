@@ -26,7 +26,7 @@ export const ChartAreaIcon = (props: React.SVGProps<SVGSVGElement>) => (
 		<path
 			d="M21.5 21.5V8.5L18.5 6.5H16L12.28 8.5L10 16.5L7 21L21.5 21.5Z"
 			fill="currentColor"
-			fill-opacity="0.2"
+			fillOpacity="0.2"
 		/>
 	</svg>
 );

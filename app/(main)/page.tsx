@@ -1,6 +1,6 @@
 import { Chart } from "@/app/(main)/components/chart/chart";
 import { ChartWrapper } from "@/app/(main)/components/chart/chart-wrapper";
-import { Navigation } from "@/app/(main)/components/navigation/navigation";
+import { SidePanel } from "@/app/(main)/components/navigation/side-panel";
 
 export default function Home() {
 	return (
@@ -10,7 +10,7 @@ export default function Home() {
 					<Chart />
 				</ChartWrapper>
 			</main>
-			<Navigation />
+			<SidePanel />
 		</div>
 	);
 }
