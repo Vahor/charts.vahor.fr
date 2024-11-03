@@ -1,5 +1,6 @@
 "use client";
 
+import { SidePanelData } from "@/app/(main)/components/navigation/data/side-panel-data";
 import { ExportImage } from "@/app/(main)/components/navigation/export-image";
 import { SidePanelType } from "@/app/(main)/components/navigation/type/side-panel-type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/card";
@@ -29,11 +30,11 @@ export const SidePanel = () => {
 	return (
 		<div
 			className={cn(
-				"absolute inset-y-0 right-0 z-50 p-4 transition-width",
+				"absolute inset-y-0 right-0 z-50 block p-4 transition-width",
 				expanded ? "w-full" : "w-full lg:w-[max(500px,33vw)]",
 			)}
 		>
-			<Card className="h-full">
+			<Card className="h-full p-0">
 				<CardHeader>
 					<div className="flex flex-row items-center justify-between gap-2">
 						<CardTitle>Customize your chart</CardTitle>
@@ -41,9 +42,9 @@ export const SidePanel = () => {
 					</div>
 					<DirectionAwareTabs tabs={tabs} onChange={setActiveTab} />
 				</CardHeader>
-				<CardContent>
+				<CardContent className="h-[calc(100%-8rem)]">
 					{activeTab === 0 && <SidePanelType />}
-					{activeTab === 1 && <div>forest</div>}
+					{activeTab === 1 && <SidePanelData />}
 					{activeTab === 2 && <div>default</div>}
 				</CardContent>
 			</Card>
