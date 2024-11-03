@@ -87,7 +87,7 @@ export const Dropzone: React.FC<{
 
 				setChartData(data);
 				const chartDataPath = keysA.map((key, i) => ({
-					evalPath: `data.${i}`,
+					evalPath: `data['${key}']`,
 					name: key,
 					position: i,
 				}));
@@ -108,7 +108,7 @@ export const Dropzone: React.FC<{
 				"absolute inset-0 m-1 rounded-lg border-2 border-transparent border-dashed",
 				dropzone.isDragActive && dropzone.isDragReject && "border-destructive",
 				dropzone.isDragActive && dropzone.isDragAccept && "border-primary",
-				isLoading && "opacity-20",
+				isLoading && "opacity-40",
 			)}
 			{...dropzone.getRootProps()}
 		>
