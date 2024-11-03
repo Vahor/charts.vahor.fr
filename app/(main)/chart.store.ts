@@ -6,6 +6,7 @@ import { devtools, persist } from "zustand/middleware";
 
 export type LineChartType = "step" | "natural" | "linear";
 export type ChartType = "area" | "line" | "bar" | "pie";
+export type ChartData = Record<string, number | string>[];
 
 export type ChartStore = {
 	chartType: ChartType;
@@ -17,7 +18,7 @@ export type ChartStore = {
 	scale: number;
 	setScale: (scale: ChartStore["scale"]) => void;
 
-	chartData: Record<string, number | string>[];
+	chartData: ChartData;
 	setChartData: (chartData: ChartStore["chartData"]) => void;
 
 	lineChartType: LineChartType;
