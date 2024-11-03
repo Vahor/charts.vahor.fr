@@ -137,6 +137,7 @@ export const useChartStore = create<ChartStore>()(
 					chartDescription: state.chartDescription,
 					focusStatsTitle: state.focusStatsTitle,
 					focusStatsValue: state.focusStatsValue,
+					lightMode: state.lightMode,
 				}),
 			},
 		),

@@ -29,7 +29,7 @@ export const SidePanel = () => {
 	return (
 		<div
 			className={cn(
-				"absolute inset-y-0 right-0 z-50 p-4 transition-all",
+				"absolute inset-y-0 right-0 z-50 p-4 transition-width",
 				expanded ? "w-full" : "w-full lg:w-[max(500px,33vw)]",
 			)}
 		>

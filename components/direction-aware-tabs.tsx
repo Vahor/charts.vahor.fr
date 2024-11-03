@@ -27,37 +27,35 @@ function DirectionAwareTabs({ tabs, onChange }: DirectionAwareTabsProps) {
 	};
 
 	return (
-		<div className="flex w-full flex-col items-center">
-			<div
-				className={cn(
-					"flex w-full cursor-pointer space-x-4 border border-transparent border-b-border",
-				)}
-			>
-				{tabs.map((tab) => (
-					<button
-						type="button"
-						key={tab.id}
-						onClick={() => handleTabClick(tab.id)}
-						className={cn(
-							"relative flex items-center gap-2 rounded-full px-3.5 py-4 font-medium text-neutral-200 text-xs transition focus-visible:outline-none focus-visible:outline-1 focus-visible:ring-1 sm:text-sm",
-							activeTab === tab.id
-								? "text-primary"
-								: "text-neutral-200/80 hover:text-neutral-300/60",
-						)}
-						style={{ WebkitTapHighlightColor: "transparent" }}
-					>
-						{activeTab === tab.id && (
-							<motion.span
-								layoutId="border"
-								className="-bottom-px absolute inset-x-0 z-10 border border-primary"
-								transition={{ type: "spring", bounce: 0.19, duration: 0.4 }}
-							/>
-						)}
+		<div
+			className={cn(
+				"flex w-full cursor-pointer space-x-4 border border-transparent border-b-border",
+			)}
+		>
+			{tabs.map((tab) => (
+				<button
+					type="button"
+					key={tab.id}
+					onClick={() => handleTabClick(tab.id)}
+					className={cn(
+						"relative flex items-center gap-2 px-3.5 py-4 font-medium text-neutral-200 text-xs transition focus-visible:outline-none sm:text-sm",
+						activeTab === tab.id
+							? "text-primary"
+							: "text-neutral-200/80 hover:text-neutral-300/60",
+					)}
+					style={{ WebkitTapHighlightColor: "transparent" }}
+				>
+					{activeTab === tab.id && (
+						<motion.span
+							layoutId="border"
+							className="-bottom-px absolute inset-x-0 z-10 border border-primary"
+							transition={{ type: "spring", bounce: 0.19, duration: 0.4 }}
+						/>
+					)}
 
-						{tab.label}
-					</button>
-				))}
-			</div>
+					{tab.label}
+				</button>
+			))}
 		</div>
 	);
 }

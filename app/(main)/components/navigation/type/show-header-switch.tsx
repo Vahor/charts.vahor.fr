@@ -9,8 +9,12 @@ export const ShowHeaderSwitch: React.FC = () => {
 	const setShowHeader = useChartStore((state) => state.setShowHeader);
 
 	return (
-		<NavigationItem title="Show header">
-			<Switch checked={showHeader} onCheckedChange={setShowHeader} />
+		<NavigationItem title="Show header" id="show-header">
+			<Switch
+				checked={showHeader}
+				onCheckedChange={setShowHeader}
+				id="show-header"
+			/>
 		</NavigationItem>
 	);
 };

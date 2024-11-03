@@ -29,9 +29,13 @@ export const LineChartCurveType: React.FC = () => {
 	const setLineChartType = useChartStore((state) => state.setLineChartType);
 
 	return (
-		<NavigationItem title="Chart type">
+		<NavigationItem title="Chart type" id="line-chart-curve-type">
 			<Select value={lineChartType} onValueChange={setLineChartType}>
-				<SelectTrigger className="w-[100px]" icon={ChevronUpIcon}>
+				<SelectTrigger
+					className="w-[100px]"
+					icon={ChevronUpIcon}
+					id="line-chart-curve-type"
+				>
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>

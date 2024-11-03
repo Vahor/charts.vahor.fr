@@ -9,8 +9,8 @@ export const ShowDotsSwitch: React.FC = () => {
 	const setShowDots = useChartStore((state) => state.setShowDots);
 
 	return (
-		<NavigationItem title="Show dots">
-			<Switch checked={showDots} onCheckedChange={setShowDots} />
+		<NavigationItem title="Show dots" id="show-dots">
+			<Switch checked={showDots} onCheckedChange={setShowDots} id="show-dots" />
 		</NavigationItem>
 	);
 };

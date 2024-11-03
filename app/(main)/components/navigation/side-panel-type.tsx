@@ -7,6 +7,7 @@ import { ShowLegendSwitch } from "@/app/(main)/components/navigation/type/show-l
 import { useChartStore } from "@/app/(main)/chart.store";
 import { LineChartCurveType } from "@/app/(main)/components/navigation/type/line-chart-curve-type";
 import { ShowDotsSwitch } from "@/app/(main)/components/navigation/type/show-dots-switch";
+import { ShowFooterSwitch } from "@/app/(main)/components/navigation/type/show-footer-switch";
 
 export const SidePanelType: React.FC = () => {
 	const chartType = useChartStore((state) => state.chartType);
@@ -14,6 +15,7 @@ export const SidePanelType: React.FC = () => {
 		<div>
 			<ChartTypeDropdown />
 			<ShowHeaderSwitch />
+			<ShowFooterSwitch />
 			<LightThemeSwitch />
 			<ShowGridSwitch />
 			<ShowLegendSwitch />

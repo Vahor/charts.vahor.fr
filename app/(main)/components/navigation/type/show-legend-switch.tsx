@@ -9,8 +9,12 @@ export const ShowLegendSwitch: React.FC = () => {
 	const setShowLegend = useChartStore((state) => state.setShowLegend);
 
 	return (
-		<NavigationItem title="Show legend">
-			<Switch checked={showLegend} onCheckedChange={setShowLegend} />
+		<NavigationItem title="Show legend" id="show-legend">
+			<Switch
+				checked={showLegend}
+				onCheckedChange={setShowLegend}
+				id="show-legend"
+			/>
 		</NavigationItem>
 	);
 };

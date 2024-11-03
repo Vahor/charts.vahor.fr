@@ -11,8 +11,11 @@ export const ShowGridSwitch: React.FC = () => {
 	const chartType = useChartStore((state) => state.chartType);
 
 	return (
-		<NavigationItem title={chartType === "pie" ? "Donut" : "Show grid"}>
-			<Switch checked={showGrid} onCheckedChange={setShowGrid} />
+		<NavigationItem
+			title={chartType === "pie" ? "Donut" : "Show grid"}
+			id="show-grid"
+		>
+			<Switch checked={showGrid} onCheckedChange={setShowGrid} id="show-grid" />
 		</NavigationItem>
 	);
 };
