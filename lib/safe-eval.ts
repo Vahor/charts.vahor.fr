@@ -1,6 +1,13 @@
 import type { ChartData } from "@/app/(main)/chart.store";
 
 export const buildSafeEvalFunction = (code: string) => {
+	if (
+		code.length === 0 ||
+		code.trim() === "" ||
+		code.toLowerCase() === "data"
+	) {
+		return () => undefined;
+	}
 	return new Function(
 		"data",
 		`

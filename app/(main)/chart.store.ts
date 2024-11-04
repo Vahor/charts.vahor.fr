@@ -2,6 +2,7 @@
 
 import type { ChartConfig } from "@/components/chart";
 import { buildSafeEvalFunction } from "@/lib/safe-eval";
+import { randomUUID } from "@/lib/uuid";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -9,10 +10,10 @@ export type LineChartType = "step" | "natural" | "linear";
 export type ChartType = "area" | "line" | "bar" | "pie";
 export type ChartData = Record<string, number | string>[];
 export type ChartDataPath = Array<{
+	uuid: string;
 	evalPath: string;
 	evalPathFunction: (data: ChartData[number]) => string | number | undefined;
 	name: string;
-	position: number;
 }>;
 
 export type ChartStore = {
@@ -29,9 +30,9 @@ export type ChartStore = {
 	setChartData: (chartData: ChartStore["chartData"]) => void;
 
 	chartDataPath: ChartDataPath;
-	setChartDataPath: (
-		chartDataPath: Omit<ChartDataPath[number], "evalPathFunction">[],
-	) => void;
+	setChartDataPath: (chartDataPath: ChartDataPath) => void;
+	updateChartDataPathName: (index: number, name: string) => void;
+	updateChartDataPathEvalPath: (index: number, evalPath: string) => void;
 
 	lineChartType: LineChartType;
 	setLineChartType: (lineChartType: ChartStore["lineChartType"]) => void;
@@ -72,7 +73,7 @@ export type ChartStore = {
 export const useChartStore = create<ChartStore>()(
 	devtools(
 		persist(
-			(set) => ({
+			(set, get) => ({
 				chartType: "line",
 				setChartType: (chartType) => set({ chartType }),
 
@@ -94,36 +95,44 @@ export const useChartStore = create<ChartStore>()(
 
 				chartDataPath: [
 					{
+						uuid: randomUUID(),
 						evalPath: "data.month.slice(0, 3).toUpperCase()",
 						evalPathFunction: buildSafeEvalFunction(
 							"data.month.slice(0, 3).toUpperCase()",
 						),
 						name: "Month",
-						position: 0,
 					},
 					{
+						uuid: randomUUID(),
 						evalPath: "data.desktop",
 						evalPathFunction: (data) => data.desktop,
 						name: "Desktop",
-						position: 1,
 					},
 					{
+						uuid: randomUUID(),
 						evalPath: "data.mobile",
 						evalPathFunction: (data) => data.mobile,
 						name: "Mobile",
-						position: 2,
 					},
 				],
-				setChartDataPath: (chartDataPath) =>
+				setChartDataPath: (chartDataPath) => set({ chartDataPath }),
+				updateChartDataPathName: (index, name) =>
 					set({
-						chartDataPath: chartDataPath
-							.toSorted((a, b) => a.position - b.position)
-							.map(({ name, evalPath, position }) => ({
-								name,
-								evalPath,
-								position,
-								evalPathFunction: buildSafeEvalFunction(evalPath),
-							})),
+						chartDataPath: get().chartDataPath.map((column, i) =>
+							i === index ? { ...column, name } : column,
+						),
+					}),
+				updateChartDataPathEvalPath: (index, evalPath) =>
+					set({
+						chartDataPath: get().chartDataPath.map((column, i) =>
+							i === index
+								? {
+										...column,
+										evalPath,
+										evalPathFunction: buildSafeEvalFunction(evalPath),
+									}
+								: column,
+						),
 					}),
 
 				chartConfig: {

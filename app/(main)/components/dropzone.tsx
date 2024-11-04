@@ -2,7 +2,9 @@
 
 import type { ChartData } from "@/app/(main)/chart.store";
 import { useChartStore } from "@/app/(main)/chart.store";
+import { buildSafeEvalFunction } from "@/lib/safe-eval";
 import { cn } from "@/lib/utils";
+import { randomUUID } from "@/lib/uuid";
 import * as csvParser from "papaparse";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -86,11 +88,15 @@ export const Dropzone: React.FC<{
 				}
 
 				setChartData(data);
-				const chartDataPath = keysA.map((key, i) => ({
-					evalPath: `data['${key}']`,
-					name: key,
-					position: i,
-				}));
+				const chartDataPath = keysA.map((key) => {
+					const evalPath = `data['${key}']`;
+					return {
+						evalPath,
+						name: key,
+						uuid: randomUUID(),
+						evalPathFunction: buildSafeEvalFunction(evalPath),
+					};
+				});
 				setChartDataPath(chartDataPath);
 			} catch (e) {
 				toast.error("Error while uploading file", { id });

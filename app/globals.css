@@ -98,4 +98,9 @@
 			"cv03", "cv04", "cv05", "cv06", "cv07", "cv08", "cv09", "cv10";
 		word-break: break-word;
 	}
+
+	.monaco-editor,
+	.monaco-editor-background {
+		background-color: var(--background) !important;
+	}
 }
