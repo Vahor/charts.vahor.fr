@@ -1,3 +1,4 @@
+import { AddNewColumn } from "@/app/(main)/components/navigation/data/add-new-column";
 import { ColumnsBuilder } from "@/app/(main)/components/navigation/data/columns-builder";
 import { DataTablePreview } from "@/app/(main)/components/navigation/data/data-table-preview";
 import { ErrorMessage } from "@/app/(main)/components/navigation/data/errors";
@@ -12,6 +13,7 @@ export const SidePanelData: React.FC = () => {
 				<Label className="text-muted-foreground">Columns</Label>
 				<ColumnsBuilder />
 			</div>
+			<AddNewColumn />
 			<ErrorMessage />
 			<div className="overflow-y-auto">
 				<Label className="text-muted-foreground">Raw data</Label>

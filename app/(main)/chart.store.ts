@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChartConfig } from "@/components/chart";
-import { buildSafeEvalFunction } from "@/lib/safe-eval";
+import { buildSafeEvalFunction, noop } from "@/lib/safe-eval";
 import { randomUUID } from "@/lib/uuid";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -34,6 +34,7 @@ export type ChartStore = {
 
 	chartDataPath: ChartDataPath;
 	setChartDataPath: (chartDataPath: ChartDataPath) => void;
+	addNewChartDataPath: () => void;
 	updateChartDataPathName: (index: number, name: string) => void;
 	updateChartDataPathEvalPath: (index: number, evalPath: string) => void;
 
@@ -120,6 +121,19 @@ export const useChartStore = create<ChartStore>()(
 				],
 
 				chartDataPathError: undefined,
+				addNewChartDataPath: () => {
+					set((state) => ({
+						chartDataPath: [
+							...state.chartDataPath,
+							{
+								uuid: randomUUID(),
+								evalPath: "data.",
+								evalPathFunction: noop,
+								name: "Unknown",
+							},
+						],
+					}));
+				},
 				setChartDataPath: (chartDataPath) => {
 					if (chartDataPath.length === 0) {
 						toast.error("You can't remove the last column");

@@ -6,7 +6,7 @@ export const buildSafeEvalFunction = (code: string) => {
 		code.trim() === "" ||
 		code.toLowerCase() === "data"
 	) {
-		return () => undefined;
+		return noop;
 	}
 	try {
 		return new Function(
@@ -26,6 +26,8 @@ export const buildSafeEvalFunction = (code: string) => {
   `,
 		) as (data: ChartData[number]) => string | number | undefined;
 	} catch (e) {
-		return () => undefined;
+		return noop;
 	}
 };
+
+export const noop = () => undefined;
