@@ -1,5 +1,6 @@
 import { ColumnsBuilder } from "@/app/(main)/components/navigation/data/columns-builder";
 import { DataTablePreview } from "@/app/(main)/components/navigation/data/data-table-preview";
+import { ErrorMessage } from "@/app/(main)/components/navigation/data/errors";
 import { Label } from "@/components/label";
 
 export const SidePanelData: React.FC = () => {
@@ -11,6 +12,7 @@ export const SidePanelData: React.FC = () => {
 				<Label className="text-muted-foreground">Columns</Label>
 				<ColumnsBuilder />
 			</div>
+			<ErrorMessage />
 			<div className="overflow-y-auto">
 				<Label className="text-muted-foreground">Raw data</Label>
 				<DataTablePreview />

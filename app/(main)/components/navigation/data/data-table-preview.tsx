@@ -19,27 +19,26 @@ export const DataTablePreview: React.FC = () => {
 	return (
 		<Table>
 			<colgroup>
-				{chartDataPath.map(({ name: column }) => (
-					<col key={column} className={cn(column === idColumn.name && "w-[100px]")} />
+				{chartDataPath.map(column => (
+					<col key={column.uuid} className={cn(column.uuid === idColumn.uuid && "w-[100px]")} />
 				))}
 			</colgroup>
 			<TableHeader>
 				<TableRow>
-					{chartDataPath.map(({ name: column }) => (
-						<TableHead key={column}>
-							{column}
+					{chartDataPath.map(column => (
+						<TableHead key={column.uuid} className={cn(column.uuid === idColumn.uuid && "text-right underline")}>
+							{column.name}
 						</TableHead>
 					))}
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{chartData.slice(0, 50).map((row) => {
-					const id = idColumn.evalPathFunction(row);
+				{chartData.slice(0, 50).map((row, i) => {
 					return (
-						<TableRow key={id}>
+						<TableRow key={i}>
 							{chartDataPath.map((column) => {
-								const isId = column.name === idColumn.name;
-								const value = isId ? id : column.evalPathFunction(row);
+								const isId = column.uuid === idColumn.uuid;
+								const value = column.evalPathFunction(row);
 								return (
 									<TableCell key={column.name} className={cn(isId && "text-right font-medium")}>
 										{value}

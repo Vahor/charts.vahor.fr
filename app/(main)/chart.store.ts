@@ -29,6 +29,8 @@ export type ChartStore = {
 	chartData: ChartData;
 	setChartData: (chartData: ChartStore["chartData"]) => void;
 
+	chartDataPathError: string | undefined;
+
 	chartDataPath: ChartDataPath;
 	setChartDataPath: (chartDataPath: ChartDataPath) => void;
 	updateChartDataPathName: (index: number, name: string) => void;
@@ -115,25 +117,40 @@ export const useChartStore = create<ChartStore>()(
 						name: "Mobile",
 					},
 				],
-				setChartDataPath: (chartDataPath) => set({ chartDataPath }),
+
+				chartDataPathError: undefined,
+				setChartDataPath: (chartDataPath) => {
+					const chartData = get().chartData;
+					const columnEvalPath = chartDataPath[0].evalPathFunction;
+					const error = checkUniqueValues(chartData, columnEvalPath);
+
+					return set({ chartDataPath, chartDataPathError: error });
+				},
 				updateChartDataPathName: (index, name) =>
 					set({
 						chartDataPath: get().chartDataPath.map((column, i) =>
 							i === index ? { ...column, name } : column,
 						),
 					}),
-				updateChartDataPathEvalPath: (index, evalPath) =>
-					set({
+				updateChartDataPathEvalPath: (index, evalPath) => {
+					const evalPathFunction = buildSafeEvalFunction(evalPath);
+					if (index === 0) {
+						const chartData = get().chartData;
+						const error = checkUniqueValues(chartData, evalPathFunction);
+						set({ chartDataPathError: error });
+					}
+					return set({
 						chartDataPath: get().chartDataPath.map((column, i) =>
 							i === index
 								? {
 										...column,
 										evalPath,
-										evalPathFunction: buildSafeEvalFunction(evalPath),
+										evalPathFunction,
 									}
 								: column,
 						),
-					}),
+					});
+				},
 
 				chartConfig: {
 					desktop: {
@@ -199,3 +216,14 @@ export const useChartStore = create<ChartStore>()(
 		),
 	),
 );
+
+const checkUniqueValues = (
+	chartData: ChartData,
+	evalPathFunction: (data: ChartData[number]) => unknown,
+) => {
+	const uniqueValues = new Set(chartData.map(evalPathFunction));
+	if (uniqueValues.size !== chartData.length) {
+		return `Columns must have unique values, found multiples rows with ${[...uniqueValues].join(", ")}`;
+	}
+	return undefined;
+};

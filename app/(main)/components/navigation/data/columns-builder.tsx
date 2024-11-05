@@ -1,11 +1,13 @@
 import { Reorder } from "framer-motion"
-import { useChartStore } from "@/app/(main)/chart.store";
+import { ChartDataPath, useChartStore } from "@/app/(main)/chart.store";
 import { DragDropVerticalIcon } from "@/components/icons/drag-drop-vertical-icon";
 import { XIcon } from "lucide-react";
 import { Input } from "@/components/input";
 import { editor } from 'monaco-editor';
-import Editor, { useMonaco } from '@monaco-editor/react';
-import { useEffect, useRef } from "react";
+import Editor from '@monaco-editor/react';
+import { useCallback, useEffect, useRef } from "react";
+import React from "react";
+import { cn } from "@/lib/utils";
 
 // Copied from https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue
 const editorOptions: editor.IStandaloneEditorConstructionOptions = {
@@ -64,10 +66,45 @@ const editorOptions: editor.IStandaloneEditorConstructionOptions = {
 export const ColumnsBuilder: React.FC<{
 }> = () => {
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
-	const chartData0 = useChartStore((state) => state.chartData[0]);
 	const setChartDataPath = useChartStore((state) => state.setChartDataPath);
 	const setChartDataPathName = useChartStore((state) => state.updateChartDataPathName);
+
+	return (
+		<div className="flex flex-col gap-4">
+			<Reorder.Group axis="y" values={chartDataPath} onReorder={setChartDataPath}>
+				{chartDataPath.map((column, index) => {
+					return (
+						<Reorder.Item
+							key={column.uuid}
+							value={column}
+							className="p-2 rounded-md border border-border bg-background flex items-center gap-2 cursor-grab relative"
+						>
+							<DragDropVerticalIcon className="size-4 shrink-0" />
+							<div className="flex gap-2 flex-1 items-center">
+								<div className="flex-col gap-4 flex-1 w-64">
+									<Input
+										value={column.name}
+										onChange={(e) => setChartDataPathName(index, e.target.value)}
+										placeholder="Column name"
+									/>
+									<MonacoEditor column={column} index={index} />
+								</div>
+								<XIcon className="cursor-pointer size-4 hover:text-destructive shrink-0" onClick={() => setChartDataPath(chartDataPath.filter((_, i) => i !== index))} />
+							</div>
+						</Reorder.Item>
+					);
+				})}
+			</Reorder.Group>
+		</div>
+	);
+};
+
+const MonacoEditor = ({ column, index }: { column: ChartDataPath[number], index: number }) => {
+	"use no memo";
 	const setChartDataPathEvalPath = useChartStore((state) => state.updateChartDataPathEvalPath);
+	const chartData0 = useChartStore((state) => state.chartData[0]);
+	const result = column.evalPathFunction(chartData0);
+	const isValid = result !== undefined;
 
 	// disable enter
 	useEffect(() => {
@@ -83,14 +120,13 @@ export const ColumnsBuilder: React.FC<{
 		};
 	}, []);
 
-	const onMonacoMount = (editor: any, monaco: any) => {
-		console.log(monaco);
-		// // validation settings
+	const onMonacoMount = (_: any, monaco: any) => {
+		// validation settings
 		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 			noSemanticValidation: true,
 			noSyntaxValidation: false
 		});
-		//
+
 		// compiler options
 		monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
 			target: monaco.languages.typescript.ScriptTarget.ES2015,
@@ -105,42 +141,23 @@ export const ColumnsBuilder: React.FC<{
 
 		// add "data" variable
 		monaco.languages.typescript.javascriptDefaults.addExtraLib(editorCustomLib, editorCustomLibUri);
-	};
+	}
 
+	const onChange = (value: string | undefined) => {
+		setChartDataPathEvalPath(index, value ?? "");
+	}
 
 	return (
-		<div className="flex flex-col gap-4">
-			<Reorder.Group axis="y" values={chartDataPath} onReorder={setChartDataPath}>
-				{chartDataPath.map((column, index) => {
-					return (
-						<Reorder.Item
-							key={column.uuid}
-							value={column}
-							className="p-2 rounded-md border border-border bg-background flex items-center gap-2 cursor-grab relative"
-						>
-							<DragDropVerticalIcon className="size-4" />
-							<div className="flex-grow flex-col gap-1">
-								<Input
-									value={column.name}
-									onChange={(e) => setChartDataPathName(index, e.target.value)}
-									placeholder="Column name"
-									className="h-8 rounded-md border border-input bg-transparent px-2 text-sm"
-								/>
-								<Editor
-									defaultValue={column.evalPath}
-									defaultLanguage="javascript"
-									theme="vs-dark"
-									options={editorOptions}
-									height="2rem"
-									onChange={(value) => setChartDataPathEvalPath(index, value ?? "")}
-									onMount={onMonacoMount}
-								/>
-							</div>
-							<XIcon className="cursor-pointer size-4 hover:text-destructive" onClick={() => setChartDataPath(chartDataPath.filter((_, i) => i !== index))} />
-						</Reorder.Item>
-					);
-				})}
-			</Reorder.Group>
+		<div className={cn("block relative h-9 mt-2 border p-2 rounded-md border-border bg-background", !isValid && "border-destructive")}>
+			<Editor
+				defaultValue={column.evalPath}
+				defaultLanguage="javascript"
+				theme="vs-dark"
+				options={editorOptions}
+				onChange={onChange}
+				onMount={onMonacoMount}
+			/>
 		</div>
-	);
-};
+	)
+
+}

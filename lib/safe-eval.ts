@@ -8,9 +8,10 @@ export const buildSafeEvalFunction = (code: string) => {
 	) {
 		return () => undefined;
 	}
-	return new Function(
-		"data",
-		`
+	try {
+		return new Function(
+			"data",
+			`
     const console = undefined;
     const document = undefined;
     const window = undefined;
@@ -23,5 +24,8 @@ export const buildSafeEvalFunction = (code: string) => {
       return undefined;
     }
   `,
-	) as (data: ChartData[number]) => string | number | undefined;
+		) as (data: ChartData[number]) => string | number | undefined;
+	} catch (e) {
+		return () => undefined;
+	}
 };
