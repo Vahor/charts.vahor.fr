@@ -1,5 +1,6 @@
 "use client";
 
+import { SidePanelColors } from "@/app/(main)/components/navigation/colors/side-panel-colors";
 import { SidePanelData } from "@/app/(main)/components/navigation/data/side-panel-data";
 import { ExportImage } from "@/app/(main)/components/navigation/export-image";
 import { SidePanelType } from "@/app/(main)/components/navigation/type/side-panel-type";
@@ -23,8 +24,8 @@ const tabs = [
 	},
 ];
 
+const expanded = false;
 export const SidePanel = () => {
-	const [expanded, setExpanded] = useState(false);
 	const [activeTab, setActiveTab] = useState(0);
 
 	return (
@@ -45,7 +46,7 @@ export const SidePanel = () => {
 				<CardContent className="h-[calc(100%-8rem)]">
 					{activeTab === 0 && <SidePanelType />}
 					{activeTab === 1 && <SidePanelData />}
-					{activeTab === 2 && <div>default</div>}
+					{activeTab === 2 && <SidePanelColors />}
 				</CardContent>
 			</Card>
 		</div>

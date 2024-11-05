@@ -15,9 +15,9 @@ import {
 	ChartLegendContent,
 } from "@/components/chart";
 import { ChartTooltip, ChartTooltipContent } from "@/components/chart";
+import { buildRechartsValues } from "@/lib/build-values";
 
 export function AreaChart() {
-	const chartData = useChartStore((state) => state.chartData);
 	const chartConfig = useChartStore((state) => state.chartConfig);
 
 	const showGrid = useChartStore((state) => state.showGrid);
@@ -25,16 +25,20 @@ export function AreaChart() {
 	const showLegend = useChartStore((state) => state.showLegend);
 	const showDots = useChartStore((state) => state.showDots);
 
+	const chartData = useChartStore((state) => state.chartData);
+	const chartDataPath = useChartStore((state) => state.chartDataPath);
+
+	const values = buildRechartsValues(chartDataPath, chartData);
+
 	return (
 		<ChartContainer config={chartConfig}>
-			<RechartsAreaChart data={chartData}>
+			<RechartsAreaChart data={values}>
 				{showGrid && <CartesianGrid vertical={false} />}
 				<XAxis
-					dataKey="month"
+					dataKey={chartDataPath[0].uuid}
 					tickLine={false}
 					axisLine={false}
 					tickMargin={8}
-					tickFormatter={(value) => value.slice(0, 3)}
 				/>
 				<ChartTooltip
 					cursor={false}
@@ -42,24 +46,21 @@ export function AreaChart() {
 				/>
 				{showLegend && <ChartLegend content={<ChartLegendContent />} />}
 
-				<Area
-					dataKey="desktop"
-					type={lineChartType}
-					stroke="var(--color-desktop)"
-					fill="var(--color-desktop)"
-					fillOpacity={0.1}
-					radius={4}
-					dot={showDots}
-				/>
-				<Area
-					dataKey="mobile"
-					type={lineChartType}
-					stroke="var(--color-mobile)"
-					fill="var(--color-mobile)"
-					fillOpacity={0.1}
-					radius={4}
-					dot={showDots}
-				/>
+				{chartDataPath.map((column, index) => {
+					if (index === 0) return null;
+					return (
+						<Area
+							key={column.uuid}
+							dataKey={column.uuid}
+							type={lineChartType}
+							stroke={`var(--color-${column.uuid})`}
+							fill={`var(--color-${column.uuid})`}
+							fillOpacity={0.1}
+							radius={4}
+							dot={showDots}
+						/>
+					);
+				})}
 				<LabelList
 					position="top"
 					offset={12}

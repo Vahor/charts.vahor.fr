@@ -33,7 +33,7 @@ export const DataTablePreview: React.FC = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{chartData.slice(0, 50).map((row, i) => {
+				{chartData.slice(0, 25).map((row, i) => {
 					return (
 						<TableRow key={i}>
 							{chartDataPath.map((column) => {

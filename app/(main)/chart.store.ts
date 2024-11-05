@@ -1,8 +1,8 @@
 "use client";
 
 import type { ChartConfig } from "@/components/chart";
+import { randomColor, randomUUID } from "@/lib/random";
 import { buildSafeEvalFunction, noop } from "@/lib/safe-eval";
-import { randomUUID } from "@/lib/uuid";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
@@ -46,6 +46,7 @@ export type ChartStore = {
 
 	chartConfig: ChartConfig;
 	setChartConfig: (chartConfig: ChartStore["chartConfig"]) => void;
+	generateChartConfig: () => void;
 
 	showLegend: boolean;
 	setShowLegend: (showLegend: ChartStore["showLegend"]) => void;
@@ -70,8 +71,6 @@ export type ChartStore = {
 	setFocusStatsTitle: (focusStatTitle: ChartStore["focusStatsTitle"]) => void;
 	focusStatsValue: string;
 	setFocusStatsValue: (focusStatValue: ChartStore["focusStatsValue"]) => void;
-
-	// TODO: focus point for tooltip (user can click on chart to focus point)
 };
 
 export const useChartStore = create<ChartStore>()(
@@ -79,7 +78,14 @@ export const useChartStore = create<ChartStore>()(
 		persist(
 			(set, get) => ({
 				chartType: "line",
-				setChartType: (chartType) => set({ chartType }),
+				setChartType: (chartType) => {
+					if (get().chartDataPath.length !== 2 && chartType === "pie") {
+						toast.error("Pie chart requires exactly 2 columns", {
+							id: "chart-type-error",
+						});
+					}
+					return set({ chartType });
+				},
 
 				scale: 1,
 				setScale: (scale) => set({ scale }),
@@ -99,7 +105,7 @@ export const useChartStore = create<ChartStore>()(
 
 				chartDataPath: [
 					{
-						uuid: randomUUID(),
+						uuid: "month",
 						evalPath: "data.month.slice(0, 3).toUpperCase()",
 						evalPathFunction: buildSafeEvalFunction(
 							"data.month.slice(0, 3).toUpperCase()",
@@ -107,13 +113,13 @@ export const useChartStore = create<ChartStore>()(
 						name: "Month",
 					},
 					{
-						uuid: randomUUID(),
+						uuid: "desktop",
 						evalPath: "data.desktop",
 						evalPathFunction: (data) => data.desktop,
 						name: "Desktop",
 					},
 					{
-						uuid: randomUUID(),
+						uuid: "mobile",
 						evalPath: "data.mobile",
 						evalPathFunction: (data) => data.mobile,
 						name: "Mobile",
@@ -122,16 +128,24 @@ export const useChartStore = create<ChartStore>()(
 
 				chartDataPathError: undefined,
 				addNewChartDataPath: () => {
+					const uuid = randomUUID();
 					set((state) => ({
 						chartDataPath: [
 							...state.chartDataPath,
 							{
-								uuid: randomUUID(),
+								uuid,
 								evalPath: "data.",
 								evalPathFunction: noop,
 								name: "Unknown",
 							},
 						],
+						chartConfig: {
+							...state.chartConfig,
+							[uuid]: {
+								label: "Unknown",
+								color: randomColor(),
+							},
+						},
 					}));
 				},
 				setChartDataPath: (chartDataPath) => {
@@ -145,12 +159,23 @@ export const useChartStore = create<ChartStore>()(
 
 					return set({ chartDataPath, chartDataPathError: error });
 				},
-				updateChartDataPathName: (index, name) =>
-					set({
-						chartDataPath: get().chartDataPath.map((column, i) =>
-							i === index ? { ...column, name } : column,
-						),
-					}),
+				updateChartDataPathName: (index, name) => {
+					const currentColumn = get().chartDataPath[index];
+					// update chartConfig label
+					get().chartConfig[currentColumn.uuid].label = name;
+
+					return set({
+						chartDataPath: get().chartDataPath.map((column, i) => {
+							if (i === index) {
+								return {
+									...column,
+									name,
+								};
+							}
+							return column;
+						}),
+					});
+				},
 				updateChartDataPathEvalPath: (index, evalPath) => {
 					const evalPathFunction = buildSafeEvalFunction(evalPath);
 					if (index === 0) {
@@ -186,6 +211,18 @@ export const useChartStore = create<ChartStore>()(
 					},
 				},
 				setChartConfig: (chartConfig) => set({ chartConfig }),
+				generateChartConfig: () => {
+					const chartConfig: ChartConfig = {};
+					for (const column of get().chartDataPath) {
+						chartConfig[column.uuid] = {
+							label: column.name,
+							color: randomColor(),
+						};
+					}
+					console.log(chartConfig);
+
+					return set({ chartConfig });
+				},
 
 				lineChartType: "natural",
 				setLineChartType: (lineChartType) => set({ lineChartType }),
@@ -252,5 +289,9 @@ const checkErrors = (
 	if (chartDataPath.length < 2) {
 		return "At least 2 columns are required";
 	}
+	if (get().chartDataPath.length !== 2 && chartType === "pie") {
+		set({ chartDataPathError: "Pie chart requires exactly 2 columns" });
+	}
+
 	return undefined;
 };

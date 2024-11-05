@@ -2,9 +2,9 @@
 
 import type { ChartData } from "@/app/(main)/chart.store";
 import { useChartStore } from "@/app/(main)/chart.store";
+import { randomUUID } from "@/lib/random";
 import { buildSafeEvalFunction } from "@/lib/safe-eval";
 import { cn } from "@/lib/utils";
-import { randomUUID } from "@/lib/uuid";
 import * as csvParser from "papaparse";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -16,6 +16,9 @@ export const Dropzone: React.FC<{
 	const [isLoading, setIsLoading] = useState(false);
 	const setChartData = useChartStore((state) => state.setChartData);
 	const setChartDataPath = useChartStore((state) => state.setChartDataPath);
+	const generateChartConfig = useChartStore(
+		(state) => state.generateChartConfig,
+	);
 
 	const dropzone = useDropzone({
 		maxFiles: 1,
@@ -56,7 +59,7 @@ export const Dropzone: React.FC<{
 
 				if (fileType === "application/json") {
 					const json = await file.text();
-					data = JSON.parse(json);
+					data = JSON.parse(json) as ChartData;
 				}
 
 				if (!data) {
@@ -88,21 +91,32 @@ export const Dropzone: React.FC<{
 				}
 
 				setChartData(data);
-				const chartDataPath = keysA.map((key) => {
-					const evalPath = `data['${key}']`;
-					return {
-						evalPath,
-						name: key,
-						uuid: randomUUID(),
-						evalPathFunction: buildSafeEvalFunction(evalPath),
-					};
-				});
+				const chartDataPath = keysA
+					.map((key, index) => {
+						const evalPath = `data['${key}']`;
+						// if data[key] is not an int and it's not the id, skip it
+						if (index !== 0 && Number.isNaN(Number(data[0][key]))) {
+							return;
+						}
+						return {
+							evalPath,
+							name: key,
+							uuid: randomUUID(),
+							evalPathFunction: buildSafeEvalFunction(evalPath),
+						};
+					})
+					.filter(Boolean);
 				setChartDataPath(chartDataPath);
+				generateChartConfig();
 			} catch (e) {
 				toast.error("Error while uploading file", { id });
 				console.error(e);
 			} finally {
-				toast.success("File uploaded", { id });
+				toast.success("File uploaded", {
+					id,
+					description:
+						"Only number columns were imported, add new columns to customize your chart",
+				});
 				setIsLoading(false);
 			}
 		},

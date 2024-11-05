@@ -9,7 +9,7 @@ import { CardHeader } from "@/components/card";
 export const ChartHeader: React.FC = () => {
 	const showHeader = useChartStore((state) => state.showHeader);
 	if (!showHeader) {
-		return null;
+		return <div className="p-4" />;
 	}
 
 	return (

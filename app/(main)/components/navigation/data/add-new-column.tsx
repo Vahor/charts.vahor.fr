@@ -7,7 +7,7 @@ export const AddNewColumn = () => {
 	const addNewColumn = useChartStore((state) => state.addNewChartDataPath);
 
 	return (
-		<Button className="w-full" size="sm" onClick={addNewColumn}>
+		<Button className="w-full shrink-0" size="sm" onClick={addNewColumn}>
 			<PlusIcon />
 			Add new column
 		</Button>

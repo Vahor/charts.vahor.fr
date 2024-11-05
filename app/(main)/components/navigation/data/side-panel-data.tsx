@@ -8,7 +8,6 @@ export const SidePanelData: React.FC = () => {
 
 	return (
 		<div className="flex flex-col gap-4 h-full">
-
 			<div>
 				<Label className="text-muted-foreground">Columns</Label>
 				<ColumnsBuilder />
@@ -16,7 +15,7 @@ export const SidePanelData: React.FC = () => {
 			<AddNewColumn />
 			<ErrorMessage />
 			<div className="overflow-y-auto">
-				<Label className="text-muted-foreground">Raw data</Label>
+				<Label className="text-muted-foreground">Raw data (first 25)</Label>
 				<DataTablePreview />
 			</div>
 		</div>

@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react";
 import { Input } from "@/components/input";
 import { editor } from 'monaco-editor';
 import Editor from '@monaco-editor/react';
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -157,6 +157,7 @@ const MonacoEditor = ({ column, index }: { column: ChartDataPath[number], index:
 		<div className={cn("block relative h-9 mt-2 border p-2 rounded-md border-border bg-background", !isValid && "border-destructive")}>
 			<Editor
 				value={column.evalPath}
+				className="pl-1"
 				defaultLanguage="typescript"
 				theme="vs-dark"
 				options={editorOptions}

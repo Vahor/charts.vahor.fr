@@ -59,7 +59,7 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<div className="absolute top-0 z-[-2] h-screen w-screen bg-[radial-gradient(ellipse_30%_30%_at_33%_50%,rgba(120,119,198,0.3),rgba(255,255,255,0))] bg-neutral-950" />
+				<div className="absolute top-0 z-[-2] h-screen w-screen bg-[radial-gradient(ellipse_400px_400px_at_33%_50%,rgba(120,119,198,0.3),rgba(255,255,255,0))] bg-neutral-950" />
 				<Toaster />
 				{children}
 			</body>

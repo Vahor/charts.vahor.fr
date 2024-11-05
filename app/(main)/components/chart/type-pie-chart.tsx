@@ -8,7 +8,9 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/chart";
-import { Label, Pie, PieChart as RechartsPieChart } from "recharts";
+import { buildRechartsValues } from "@/lib/build-values";
+import { useState } from "react";
+import { Label, Pie, PieChart as RechartsPieChart, Sector } from "recharts";
 
 const colorBrewerPalette = [
 	"#1f77b4",
@@ -23,15 +25,91 @@ const colorBrewerPalette = [
 	"#17becf",
 ];
 
+const renderActiveShape = (props) => {
+	const RADIAN = Math.PI / 180;
+	const {
+		cx,
+		cy,
+		midAngle,
+		innerRadius,
+		outerRadius,
+		startAngle,
+		endAngle,
+		fill,
+		payload,
+		percent,
+		value,
+	} = props;
+	const sin = Math.sin(-RADIAN * midAngle);
+	const cos = Math.cos(-RADIAN * midAngle);
+	const sx = cx + (outerRadius + 10) * cos;
+	const sy = cy + (outerRadius + 10) * sin;
+	const mx = cx + (outerRadius + 30) * cos;
+	const my = cy + (outerRadius + 30) * sin;
+	const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+	const ey = my;
+	const textAnchor = cos >= 0 ? "start" : "end";
+
+	return (
+		<g>
+			<Sector
+				cx={cx}
+				cy={cy}
+				innerRadius={innerRadius}
+				outerRadius={outerRadius}
+				startAngle={startAngle}
+				endAngle={endAngle}
+				fill={fill}
+			/>
+			<Sector
+				cx={cx}
+				cy={cy}
+				startAngle={startAngle}
+				endAngle={endAngle}
+				innerRadius={outerRadius + 6}
+				outerRadius={outerRadius + 10}
+				fill={fill}
+			/>
+			<path
+				d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+				stroke={fill}
+				fill="none"
+			/>
+			<circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+			<text
+				x={ex + (cos >= 0 ? 1 : -1) * 12}
+				y={ey}
+				textAnchor={textAnchor}
+				className="fill-foreground"
+			>{`${payload.name}: ${value}`}</text>
+			<text
+				x={ex + (cos >= 0 ? 1 : -1) * 12}
+				y={ey}
+				dy={18}
+				textAnchor={textAnchor}
+				className="fill-muted-foreground"
+			>
+				{`(${(percent * 100).toFixed(2)}%)`}
+			</text>
+		</g>
+	);
+};
+
 export function PieChart() {
-	const chartData = useChartStore((state) => state.chartData);
 	const chartConfig = useChartStore((state) => state.chartConfig);
 	const showGrid = useChartStore((state) => state.showGrid);
 	const showLegend = useChartStore((state) => state.showLegend);
 
-	const dataWithFill = chartData.map((data, index) => {
+	const chartData = useChartStore((state) => state.chartData);
+	const chartDataPath = useChartStore((state) => state.chartDataPath);
+	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+	const values = buildRechartsValues(chartDataPath, chartData);
+
+	const valuesWithFill = values.map((data, index) => {
 		return {
 			...data,
+			name: data[chartDataPath[0].uuid],
 			fill: colorBrewerPalette[index % colorBrewerPalette.length],
 		};
 	});
@@ -43,16 +121,29 @@ export function PieChart() {
 					cursor={false}
 					content={<ChartTooltipContent indicator="line" />}
 				/>
-				{showLegend && <ChartLegend content={<ChartLegendContent />} />}
+				{showLegend && (
+					<ChartLegend
+						verticalAlign="bottom"
+						wrapperStyle={{ paddingTop: 20 }}
+						content={<ChartLegendContent />}
+					/>
+				)}
 
 				<Pie
-					data={dataWithFill}
-					labelLine={false}
-					dataKey="desktop"
-					nameKey="month"
+					data={valuesWithFill}
+					labelLine
+					activeShape={renderActiveShape}
+					dataKey={chartDataPath[1].uuid}
 					isAnimationActive={false}
-					innerRadius={showGrid ? 60 : 0}
-					strokeWidth={5}
+					activeIndex={activeIndex ?? undefined}
+					innerRadius={showGrid ? 70 : 0}
+					strokeWidth={1.4}
+					paddingAngle={1}
+					fontSize={13}
+					startOffset={50}
+					onClick={(_, index) => {
+						setActiveIndex((prev) => (prev === index ? null : index));
+					}}
 				>
 					{showGrid && (
 						<Label
@@ -70,7 +161,7 @@ export function PieChart() {
 												y={viewBox.cy}
 												className="fill-foreground font-bold text-3xl"
 											>
-												text
+												text {activeIndex}
 											</tspan>
 											<tspan
 												x={viewBox.cx}
