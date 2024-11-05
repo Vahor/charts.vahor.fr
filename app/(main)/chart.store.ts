@@ -289,9 +289,6 @@ const checkErrors = (
 	if (chartDataPath.length < 2) {
 		return "At least 2 columns are required";
 	}
-	if (get().chartDataPath.length !== 2 && chartType === "pie") {
-		set({ chartDataPathError: "Pie chart requires exactly 2 columns" });
-	}
 
 	return undefined;
 };
