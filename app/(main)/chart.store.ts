@@ -3,6 +3,7 @@
 import type { ChartConfig } from "@/components/chart";
 import { buildSafeEvalFunction } from "@/lib/safe-eval";
 import { randomUUID } from "@/lib/uuid";
+import { toast } from "sonner";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -120,9 +121,13 @@ export const useChartStore = create<ChartStore>()(
 
 				chartDataPathError: undefined,
 				setChartDataPath: (chartDataPath) => {
+					if (chartDataPath.length === 0) {
+						toast.error("You can't remove the last column");
+						return;
+					}
 					const chartData = get().chartData;
 					const columnEvalPath = chartDataPath[0].evalPathFunction;
-					const error = checkUniqueValues(chartData, columnEvalPath);
+					const error = checkErrors(chartData, columnEvalPath, chartDataPath);
 
 					return set({ chartDataPath, chartDataPathError: error });
 				},
@@ -136,7 +141,11 @@ export const useChartStore = create<ChartStore>()(
 					const evalPathFunction = buildSafeEvalFunction(evalPath);
 					if (index === 0) {
 						const chartData = get().chartData;
-						const error = checkUniqueValues(chartData, evalPathFunction);
+						const error = checkErrors(
+							chartData,
+							evalPathFunction,
+							get().chartDataPath,
+						);
 						set({ chartDataPathError: error });
 					}
 					return set({
@@ -217,13 +226,17 @@ export const useChartStore = create<ChartStore>()(
 	),
 );
 
-const checkUniqueValues = (
+const checkErrors = (
 	chartData: ChartData,
 	evalPathFunction: (data: ChartData[number]) => unknown,
+	chartDataPath: ChartStore["chartDataPath"],
 ) => {
 	const uniqueValues = new Set(chartData.map(evalPathFunction));
 	if (uniqueValues.size !== chartData.length) {
 		return `Columns must have unique values, found multiples rows with ${[...uniqueValues].join(", ")}`;
+	}
+	if (chartDataPath.length < 2) {
+		return "At least 2 columns are required";
 	}
 	return undefined;
 };
