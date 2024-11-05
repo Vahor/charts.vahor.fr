@@ -15,20 +15,8 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { LabelList, Pie, PieChart as RechartsPieChart, Sector } from "recharts";
 
-const colorBrewerPalette = [
-	"#1f77b4",
-	"#ff7f0e",
-	"#2ca02c",
-	"#d62728",
-	"#9467bd",
-	"#8c564b",
-	"#e377c2",
-	"#7f7f7f",
-	"#bcbd22",
-	"#17becf",
-];
-
-const renderActiveShape = (props) => {
+// biome-ignore lint/suspicious/noExplicitAny: TODO: fix typing
+const renderActiveShape = (props: any) => {
 	const RADIAN = Math.PI / 180;
 	const {
 		cx,
@@ -107,6 +95,7 @@ export function PieChart() {
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const colors = useChartStore((state) => state.colors);
 
 	const values = buildRechartsValues(chartDataPath, chartData);
 
@@ -114,7 +103,7 @@ export function PieChart() {
 		return {
 			...data,
 			name: data[chartDataPath[0].uuid],
-			fill: colorBrewerPalette[index % colorBrewerPalette.length],
+			fill: colors[index % colors.length].hex,
 		};
 	});
 

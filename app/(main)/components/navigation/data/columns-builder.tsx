@@ -92,7 +92,7 @@ export const ColumnsBuilder: React.FC<{
 						<Reorder.Item
 							key={column.uuid}
 							value={column}
-							className="p-2 rounded-md border border-border bg-background flex items-center gap-2 cursor-grab relative"
+							className="py-3 px-2 rounded-md border border-border bg-background flex items-center gap-2 cursor-grab relative"
 						>
 							<DragDropVerticalIcon className="size-4 shrink-0" />
 							<div className="flex gap-2 flex-1 items-center">

@@ -28,6 +28,7 @@ export function BarChart() {
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
+	const colors = useChartStore((state) => state.colors);
 
 	const values = buildRechartsValues(chartDataPath, chartData);
 
@@ -54,7 +55,7 @@ export function BarChart() {
 						<Bar
 							key={column.uuid}
 							dataKey={column.uuid}
-							fill={`var(--color-${column.uuid})`}
+							fill={colors[index - 1].hex}
 							radius={4}
 							strokeWidth={2}
 							activeBar={({ ...props }) => {

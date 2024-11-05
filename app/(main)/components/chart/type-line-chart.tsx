@@ -31,6 +31,7 @@ export function LineChart() {
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
+	const colors = useChartStore((state) => state.colors);
 
 	const values = buildRechartsValues(chartDataPath, chartData);
 
@@ -69,8 +70,8 @@ export function LineChart() {
 							key={column.uuid}
 							dataKey={column.uuid}
 							type={lineChartType}
-							stroke={`var(--color-${column.uuid})`}
-							fill={`var(--color-${column.uuid})`}
+							stroke={colors[index - 1].hex}
+							fill={colors[index - 1].hex}
 							fillOpacity={0.1}
 							radius={4}
 							dot={showDots}

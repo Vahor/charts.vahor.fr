@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChartConfig } from "@/components/chart";
-import { randomColor, randomUUID } from "@/lib/random";
+import { randomUUID } from "@/lib/random";
 import { buildSafeEvalFunction, noop } from "@/lib/safe-eval";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -16,11 +16,13 @@ export type ChartDataPath = Array<{
 	evalPathFunction: (data: ChartData[number]) => string | number | undefined;
 	name: string;
 }>;
+export type Color = { hex: string; uuid: string };
 
 export type ChartStore = {
 	chartType: ChartType;
 	setChartType: (chartType: ChartStore["chartType"]) => void;
 
+	// TODO: add more themes
 	lightMode: boolean;
 	setLightMode: (lightMode: ChartStore["lightMode"]) => void;
 
@@ -47,6 +49,10 @@ export type ChartStore = {
 	chartConfig: ChartConfig;
 	setChartConfig: (chartConfig: ChartStore["chartConfig"]) => void;
 	generateChartConfig: () => void;
+
+	colors: Color[];
+	setColors: (colors: ChartStore["colors"]) => void;
+	updateColor: (index: number, color: string) => void;
 
 	showLegend: boolean;
 	setShowLegend: (showLegend: ChartStore["showLegend"]) => void;
@@ -152,7 +158,6 @@ export const useChartStore = create<ChartStore>()(
 							...state.chartConfig,
 							[uuid]: {
 								label: "Unknown",
-								color: randomColor(),
 							},
 						},
 					}));
@@ -209,14 +214,13 @@ export const useChartStore = create<ChartStore>()(
 					});
 				},
 
+				// TODO: remove chartConfig, if it only has the label we alreay have the info in chartDataPath
 				chartConfig: {
 					desktop: {
 						label: "Desktop",
-						color: "#2563eb",
 					},
 					mobile: {
 						label: "Mobile",
-						color: "#60a5fa",
 					},
 				},
 				setChartConfig: (chartConfig) => set({ chartConfig }),
@@ -225,11 +229,31 @@ export const useChartStore = create<ChartStore>()(
 					for (const column of get().chartDataPath) {
 						chartConfig[column.uuid] = {
 							label: column.name,
-							color: randomColor(),
 						};
 					}
 
 					return set({ chartConfig });
+				},
+
+				colors: [
+					{ hex: "#2563eb", uuid: "blue" },
+					{ hex: "#ff7f0e", uuid: "orange" },
+					{ hex: "#2ca02c", uuid: "green" },
+					{ hex: "#d62728", uuid: "red" },
+					{ hex: "#9467bd", uuid: "purple" },
+					{ hex: "#8c564b", uuid: "brown" },
+					{ hex: "#e377c2", uuid: "pink" },
+					{ hex: "#7f7f7f", uuid: "gray" },
+					{ hex: "#bcbd22", uuid: "olive" },
+					{ hex: "#17becf", uuid: "cyan" },
+				],
+				setColors: (colors) => set({ colors }),
+				updateColor: (index, color) => {
+					return set({
+						colors: get().colors.map((c, i) =>
+							i === index ? { hex: color, uuid: c.uuid } : c,
+						),
+					});
 				},
 
 				lineChartType: "natural",
@@ -291,6 +315,7 @@ export const useChartStore = create<ChartStore>()(
 					showLabel: state.showLabel,
 					showXAxisLabel: state.showXAxisLabel,
 					showYAxisLabel: state.showYAxisLabel,
+					colors: state.colors,
 				}),
 			},
 		),
