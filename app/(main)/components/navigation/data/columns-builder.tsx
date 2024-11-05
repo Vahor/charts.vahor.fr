@@ -69,6 +69,21 @@ export const ColumnsBuilder: React.FC<{
 	const setChartDataPath = useChartStore((state) => state.setChartDataPath);
 	const setChartDataPathName = useChartStore((state) => state.updateChartDataPathName);
 
+	// disable enter
+	useEffect(() => {
+		const controller = new AbortController();
+		window.addEventListener("keydown", (e) => {
+			if (e.key === "Enter") {
+				e.preventDefault();
+			}
+		}, { signal: controller.signal });
+
+		return () => {
+			controller.abort();
+		};
+	}, []);
+
+
 	return (
 		<div className="flex flex-col gap-4">
 			<Reorder.Group axis="y" values={chartDataPath} onReorder={setChartDataPath}>
@@ -87,7 +102,7 @@ export const ColumnsBuilder: React.FC<{
 										onChange={(e) => setChartDataPathName(index, e.target.value)}
 										placeholder="Column name"
 									/>
-									<MonacoEditor column={column} index={index} />
+									<MonacoEditor column={column} index={index} key={index} />
 								</div>
 								<XIcon className="cursor-pointer size-4 hover:text-destructive shrink-0" onClick={() => setChartDataPath(chartDataPath.filter((_, i) => i !== index))} />
 							</div>
@@ -100,27 +115,18 @@ export const ColumnsBuilder: React.FC<{
 };
 
 const MonacoEditor = ({ column, index }: { column: ChartDataPath[number], index: number }) => {
-	"use no memo";
 	const setChartDataPathEvalPath = useChartStore((state) => state.updateChartDataPathEvalPath);
 	const chartData0 = useChartStore((state) => state.chartData[0]);
 	const result = column.evalPathFunction(chartData0);
 	const isValid = result !== undefined;
 
-	// disable enter
-	useEffect(() => {
-		const controller = new AbortController();
-		window.addEventListener("keydown", (e) => {
-			if (e.key === "Enter") {
-				e.preventDefault();
-			}
-		}, { signal: controller.signal });
-
-		return () => {
-			controller.abort();
-		};
-	}, []);
-
 	const onMonacoMount = (_: any, monaco: any) => {
+		if (typeof window === "undefined") return;
+		// @ts-expect-error - window.monaco is not typed
+		if (window.monacoMounted) return;
+		// @ts-expect-error - window.monaco is not typed
+		window.monacoMounted = true;
+
 		// validation settings
 		monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 			noSemanticValidation: true,
@@ -140,7 +146,7 @@ const MonacoEditor = ({ column, index }: { column: ChartDataPath[number], index:
 
 
 		// add "data" variable
-		monaco.languages.typescript.javascriptDefaults.addExtraLib(editorCustomLib, editorCustomLibUri);
+		monaco.languages.typescript.typescriptDefaults.addExtraLib(editorCustomLib, editorCustomLibUri);
 	}
 
 	const onChange = (value: string | undefined) => {
@@ -150,8 +156,8 @@ const MonacoEditor = ({ column, index }: { column: ChartDataPath[number], index:
 	return (
 		<div className={cn("block relative h-9 mt-2 border p-2 rounded-md border-border bg-background", !isValid && "border-destructive")}>
 			<Editor
-				defaultValue={column.evalPath}
-				defaultLanguage="javascript"
+				value={column.evalPath}
+				defaultLanguage="typescript"
 				theme="vs-dark"
 				options={editorOptions}
 				onChange={onChange}
