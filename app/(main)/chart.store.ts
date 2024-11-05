@@ -83,6 +83,7 @@ export const useChartStore = create<ChartStore>()(
 						toast.error("Pie chart requires exactly 2 columns", {
 							id: "chart-type-error",
 						});
+						return;
 					}
 					return set({ chartType });
 				},
@@ -219,7 +220,6 @@ export const useChartStore = create<ChartStore>()(
 							color: randomColor(),
 						};
 					}
-					console.log(chartConfig);
 
 					return set({ chartConfig });
 				},

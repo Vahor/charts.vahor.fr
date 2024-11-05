@@ -1,6 +1,8 @@
 "use client";
 
 import { useChartStore } from "@/app/(main)/chart.store";
+import { ChartFocusStatsTitle } from "@/app/(main)/components/chart/chart-focus-stats-title";
+import { ChartFocusStatsValue } from "@/app/(main)/components/chart/chart-focus-stats-value";
 import {
 	ChartContainer,
 	ChartLegend,
@@ -10,7 +12,7 @@ import {
 } from "@/components/chart";
 import { buildRechartsValues } from "@/lib/build-values";
 import { useState } from "react";
-import { Label, Pie, PieChart as RechartsPieChart, Sector } from "recharts";
+import { Pie, PieChart as RechartsPieChart, Sector } from "recharts";
 
 const colorBrewerPalette = [
 	"#1f77b4",
@@ -115,7 +117,15 @@ export function PieChart() {
 	});
 
 	return (
+		// @ts-expect-error - Expect a single child, but works with multiple
 		<ChartContainer config={chartConfig}>
+			{showGrid && (
+				<div className="absolute inset-0 z-50 mx-auto flex w-[100px] flex-col items-center justify-center">
+					<ChartFocusStatsTitle className="h-auto text-center font-bold text-3xl" />
+					<ChartFocusStatsValue className="h-auto text-center text-xs" />
+				</div>
+			)}
+
 			<RechartsPieChart>
 				<ChartTooltip
 					cursor={false}
@@ -144,39 +154,7 @@ export function PieChart() {
 					onClick={(_, index) => {
 						setActiveIndex((prev) => (prev === index ? null : index));
 					}}
-				>
-					{showGrid && (
-						<Label
-							content={({ viewBox }) => {
-								if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-									return (
-										<text
-											x={viewBox.cx}
-											y={viewBox.cy}
-											textAnchor="middle"
-											dominantBaseline="middle"
-										>
-											<tspan
-												x={viewBox.cx}
-												y={viewBox.cy}
-												className="fill-foreground font-bold text-3xl"
-											>
-												text {activeIndex}
-											</tspan>
-											<tspan
-												x={viewBox.cx}
-												y={(viewBox.cy || 0) + 24}
-												className="fill-muted-foreground"
-											>
-												Visitors
-											</tspan>
-										</text>
-									);
-								}
-							}}
-						/>
-					)}
-				</Pie>
+				/>
 			</RechartsPieChart>
 		</ChartContainer>
 	);
