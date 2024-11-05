@@ -54,6 +54,12 @@ export type ChartStore = {
 	showLabel: boolean;
 	setShowLabel: (showLabel: ChartStore["showLabel"]) => void;
 
+	showXAxisLabel: boolean;
+	setShowXAxisLabel: (xAxisLabel: ChartStore["showXAxisLabel"]) => void;
+
+	showYAxisLabel: boolean;
+	setShowYAxisLabel: (yAxisLabel: ChartStore["showYAxisLabel"]) => void;
+
 	chartTitle: string;
 	setChartTitle: (chartTitle: ChartStore["chartTitle"]) => void;
 	chartDescription: string;
@@ -247,6 +253,12 @@ export const useChartStore = create<ChartStore>()(
 				showFooter: true,
 				setShowFooter: (showFooter) => set({ showFooter }),
 
+				showXAxisLabel: true,
+				setShowXAxisLabel: (xAxisLabel) => set({ showXAxisLabel: xAxisLabel }),
+
+				showYAxisLabel: true,
+				setShowYAxisLabel: (yAxisLabel) => set({ showYAxisLabel: yAxisLabel }),
+
 				chartTitle: "",
 				setChartTitle: (chartTitle) => set({ chartTitle: chartTitle }),
 				chartDescription: "",
@@ -277,6 +289,8 @@ export const useChartStore = create<ChartStore>()(
 					focusStatsValue: state.focusStatsValue,
 					lightMode: state.lightMode,
 					showLabel: state.showLabel,
+					showXAxisLabel: state.showXAxisLabel,
+					showYAxisLabel: state.showYAxisLabel,
 				}),
 			},
 		),

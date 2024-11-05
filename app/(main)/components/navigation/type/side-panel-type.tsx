@@ -9,6 +9,8 @@ import { NavigationGroup } from "@/app/(main)/components/navigation/navigation-g
 import { LineChartCurveType } from "@/app/(main)/components/navigation/type/line-chart-curve-type";
 import { ShowDotsSwitch } from "@/app/(main)/components/navigation/type/show-dots-switch";
 import { ShowLabelSwitch } from "@/app/(main)/components/navigation/type/show-label";
+import { XAxisLabelSwitch } from "@/app/(main)/components/navigation/type/x-axis-label-switch";
+import { YAxisLabelSwitch } from "@/app/(main)/components/navigation/type/y-axis-label-switch";
 
 export const SidePanelType: React.FC = () => {
 	const chartType = useChartStore((state) => state.chartType);
@@ -21,6 +23,8 @@ export const SidePanelType: React.FC = () => {
 				<ShowGridSwitch />
 				<ShowLegendSwitch />
 				<ShowLabelSwitch />
+				<YAxisLabelSwitch />
+				<XAxisLabelSwitch />
 				{(chartType === "line" || chartType === "area") && <ShowDotsSwitch />}
 				{chartType === "line" && <LineChartCurveType />}
 			</NavigationGroup>
