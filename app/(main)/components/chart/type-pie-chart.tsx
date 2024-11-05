@@ -114,7 +114,7 @@ export function PieChart() {
 				<div
 					className={cn(
 						"absolute inset-0 z-50 mx-auto flex w-[100px] flex-col items-center justify-center",
-						showLegend && "pb-12",
+						showLegend && "pb-8",
 					)}
 				>
 					<ChartFocusStatsTitle className="h-auto text-center font-bold text-3xl" />
