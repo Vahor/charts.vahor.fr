@@ -24,6 +24,7 @@ export function AreaChart() {
 	const lineChartType = useChartStore((state) => state.lineChartType);
 	const showLegend = useChartStore((state) => state.showLegend);
 	const showDots = useChartStore((state) => state.showDots);
+	const showLabel = useChartStore((state) => state.showLabel);
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
@@ -32,7 +33,8 @@ export function AreaChart() {
 
 	return (
 		<ChartContainer config={chartConfig}>
-			<RechartsAreaChart data={values}>
+			{/* @ts-expect-error - Recharts doesn't have overflow prop, but it works */}
+			<RechartsAreaChart data={values} overflow="visible">
 				{showGrid && <CartesianGrid vertical={false} />}
 				<XAxis
 					dataKey={chartDataPath[0].uuid}
@@ -58,15 +60,18 @@ export function AreaChart() {
 							fillOpacity={0.1}
 							radius={4}
 							dot={showDots}
-						/>
+						>
+							{showLabel && (
+								<LabelList
+									position="top"
+									offset={12}
+									className="fill-foreground"
+									fontSize={12}
+								/>
+							)}
+						</Area>
 					);
 				})}
-				<LabelList
-					position="top"
-					offset={12}
-					className="fill-foreground"
-					fontSize={12}
-				/>
 			</RechartsAreaChart>
 		</ChartContainer>
 	);

@@ -3,6 +3,7 @@
 import {
 	Bar,
 	CartesianGrid,
+	LabelList,
 	BarChart as RechartsBarChart,
 	Rectangle,
 	XAxis,
@@ -23,6 +24,7 @@ export function BarChart() {
 
 	const showGrid = useChartStore((state) => state.showGrid);
 	const showLegend = useChartStore((state) => state.showLegend);
+	const showLabel = useChartStore((state) => state.showLabel);
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
@@ -31,7 +33,8 @@ export function BarChart() {
 
 	return (
 		<ChartContainer config={chartConfig}>
-			<RechartsBarChart data={values}>
+			{/* @ts-expect-error - Recharts doesn't have overflow prop, but it works */}
+			<RechartsBarChart data={values} overflow="visible">
 				{showGrid && <CartesianGrid vertical={false} />}
 				<XAxis
 					dataKey={chartDataPath[0].uuid}
@@ -65,7 +68,16 @@ export function BarChart() {
 									/>
 								);
 							}}
-						/>
+						>
+							{showLabel && (
+								<LabelList
+									position="top"
+									offset={12}
+									className="fill-foreground"
+									fontSize={12}
+								/>
+							)}
+						</Bar>
 					);
 				})}
 			</RechartsBarChart>

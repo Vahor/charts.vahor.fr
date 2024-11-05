@@ -51,6 +51,9 @@ export type ChartStore = {
 	showLegend: boolean;
 	setShowLegend: (showLegend: ChartStore["showLegend"]) => void;
 
+	showLabel: boolean;
+	setShowLabel: (showLabel: ChartStore["showLabel"]) => void;
+
 	chartTitle: string;
 	setChartTitle: (chartTitle: ChartStore["chartTitle"]) => void;
 	chartDescription: string;
@@ -83,7 +86,6 @@ export const useChartStore = create<ChartStore>()(
 						toast.error("Pie chart requires exactly 2 columns", {
 							id: "chart-type-error",
 						});
-						return;
 					}
 					return set({ chartType });
 				},
@@ -230,6 +232,9 @@ export const useChartStore = create<ChartStore>()(
 				showDots: true,
 				setShowDots: (showDots) => set({ showDots }),
 
+				showLabel: true,
+				setShowLabel: (showLabel) => set({ showLabel }),
+
 				showGrid: true,
 				setShowGrid: (showGrid) => set({ showGrid }),
 
@@ -271,6 +276,7 @@ export const useChartStore = create<ChartStore>()(
 					focusStatsTitle: state.focusStatsTitle,
 					focusStatsValue: state.focusStatsValue,
 					lightMode: state.lightMode,
+					showLabel: state.showLabel,
 				}),
 			},
 		),

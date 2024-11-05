@@ -24,6 +24,7 @@ export function LineChart() {
 	const lineChartType = useChartStore((state) => state.lineChartType);
 	const showLegend = useChartStore((state) => state.showLegend);
 	const showDots = useChartStore((state) => state.showDots);
+	const showLabel = useChartStore((state) => state.showLabel);
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
@@ -32,7 +33,8 @@ export function LineChart() {
 
 	return (
 		<ChartContainer config={chartConfig}>
-			<RechartsLineChart data={values}>
+			{/* @ts-expect-error - Recharts doesn't have overflow prop, but it works */}
+			<RechartsLineChart data={values} overflow="visible">
 				{showGrid && <CartesianGrid vertical={false} />}
 				<XAxis
 					dataKey={chartDataPath[0].uuid}
@@ -58,15 +60,18 @@ export function LineChart() {
 							fillOpacity={0.1}
 							radius={4}
 							dot={showDots}
-						/>
+						>
+							{showLabel && (
+								<LabelList
+									position="top"
+									offset={12}
+									className="fill-foreground"
+									fontSize={12}
+								/>
+							)}
+						</Line>
 					);
 				})}
-				<LabelList
-					position="top"
-					offset={12}
-					className="fill-foreground"
-					fontSize={12}
-				/>
 			</RechartsLineChart>
 		</ChartContainer>
 	);

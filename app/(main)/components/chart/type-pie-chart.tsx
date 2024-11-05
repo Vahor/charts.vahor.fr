@@ -11,8 +11,9 @@ import {
 	ChartTooltipContent,
 } from "@/components/chart";
 import { buildRechartsValues } from "@/lib/build-values";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Pie, PieChart as RechartsPieChart, Sector } from "recharts";
+import { LabelList, Pie, PieChart as RechartsPieChart, Sector } from "recharts";
 
 const colorBrewerPalette = [
 	"#1f77b4",
@@ -101,6 +102,7 @@ export function PieChart() {
 	const chartConfig = useChartStore((state) => state.chartConfig);
 	const showGrid = useChartStore((state) => state.showGrid);
 	const showLegend = useChartStore((state) => state.showLegend);
+	const showLabel = useChartStore((state) => state.showLabel);
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
@@ -120,13 +122,19 @@ export function PieChart() {
 		// @ts-expect-error - Expect a single child, but works with multiple
 		<ChartContainer config={chartConfig}>
 			{showGrid && (
-				<div className="absolute inset-0 z-50 mx-auto flex w-[100px] flex-col items-center justify-center">
+				<div
+					className={cn(
+						"absolute inset-0 z-50 mx-auto flex w-[100px] flex-col items-center justify-center",
+						showLegend && "pb-12",
+					)}
+				>
 					<ChartFocusStatsTitle className="h-auto text-center font-bold text-3xl" />
 					<ChartFocusStatsValue className="h-auto text-center text-xs" />
 				</div>
 			)}
 
-			<RechartsPieChart>
+			{/* @ts-expect-error - Recharts doesn't have overflow prop, but it works */}
+			<RechartsPieChart data={values} overflow="visible">
 				<ChartTooltip
 					cursor={false}
 					content={<ChartTooltipContent indicator="line" />}
@@ -154,7 +162,15 @@ export function PieChart() {
 					onClick={(_, index) => {
 						setActiveIndex((prev) => (prev === index ? null : index));
 					}}
-				/>
+				>
+					{showLabel && (
+						<LabelList
+							className="fill-background"
+							stroke="none"
+							fontSize={12}
+						/>
+					)}
+				</Pie>
 			</RechartsPieChart>
 		</ChartContainer>
 	);
