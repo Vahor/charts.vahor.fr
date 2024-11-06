@@ -113,7 +113,7 @@ export function PieChart() {
 			{showGrid && (
 				<div
 					className={cn(
-						"absolute inset-0 z-50 mx-auto flex w-[100px] flex-col items-center justify-center",
+						"absolute inset-0 z-50 m-auto flex h-max w-[110px] flex-col items-center justify-center",
 						showLegend && "pb-8",
 					)}
 				>
