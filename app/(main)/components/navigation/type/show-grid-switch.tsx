@@ -15,7 +15,12 @@ export const ShowGridSwitch: React.FC = () => {
 			title={chartType === "pie" ? "Donut" : "Show grid"}
 			id="show-grid"
 		>
-			<Switch checked={showGrid} onCheckedChange={setShowGrid} id="show-grid" />
+			<Switch
+				checked={showGrid}
+				onCheckedChange={setShowGrid}
+				id="show-grid"
+				aria-labelledby="show-grid-label"
+			/>
 		</NavigationItem>
 	);
 };

@@ -14,6 +14,7 @@ export const ShowFooterSwitch: React.FC = () => {
 				checked={showFooter}
 				onCheckedChange={setShowFooter}
 				id="show-footer"
+				aria-labelledby="show-footer-label"
 			/>
 		</NavigationItem>
 	);

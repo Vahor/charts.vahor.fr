@@ -14,6 +14,7 @@ export const ShowLegendSwitch: React.FC = () => {
 				checked={showLegend}
 				onCheckedChange={setShowLegend}
 				id="show-legend"
+				aria-labelledby="show-legend-label"
 			/>
 		</NavigationItem>
 	);

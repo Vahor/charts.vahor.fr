@@ -9,11 +9,12 @@ export const LightThemeSwitch: React.FC = () => {
 	const setLightMode = useChartStore((state) => state.setLightMode);
 
 	return (
-		<NavigationItem title="Light mode" id="light-mode">
+		<NavigationItem title="Light mode" id="theme-switch">
 			<Switch
 				checked={lightMode}
 				onCheckedChange={setLightMode}
-				id="light-mode"
+				id="theme-switch"
+				aria-labelledby="theme-switch-label"
 			/>
 		</NavigationItem>
 	);

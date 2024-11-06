@@ -14,6 +14,7 @@ export const YAxisLabelSwitch: React.FC = () => {
 				checked={showYAxisLabel}
 				onCheckedChange={setShowYAxisLabel}
 				id="show-y-axis-label"
+				aria-labelledby="show-y-axis-label-label"
 			/>
 		</NavigationItem>
 	);

@@ -35,6 +35,7 @@ export const LineChartCurveType: React.FC = () => {
 					className="w-[100px]"
 					icon={ChevronUpIcon}
 					id="line-chart-curve-type"
+					aria-labelledby="line-chart-curve-type-label"
 				>
 					<SelectValue />
 				</SelectTrigger>

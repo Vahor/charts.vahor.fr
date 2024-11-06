@@ -8,6 +8,7 @@ import { useChartStore } from "@/app/(main)/chart.store";
 import { NavigationGroup } from "@/app/(main)/components/navigation/navigation-group";
 import { LineChartCurveType } from "@/app/(main)/components/navigation/type/line-chart-curve-type";
 import { ShowDotsSwitch } from "@/app/(main)/components/navigation/type/show-dots-switch";
+import { ShowFooterSwitch } from "@/app/(main)/components/navigation/type/show-footer-switch";
 import { ShowLabelSwitch } from "@/app/(main)/components/navigation/type/show-label";
 import { XAxisLabelSwitch } from "@/app/(main)/components/navigation/type/x-axis-label-switch";
 import { YAxisLabelSwitch } from "@/app/(main)/components/navigation/type/y-axis-label-switch";
@@ -19,6 +20,7 @@ export const SidePanelType: React.FC = () => {
 			<NavigationGroup title="Appearance">
 				<ChartTypeDropdown />
 				<ShowHeaderSwitch />
+				<ShowFooterSwitch />
 				<LightThemeSwitch />
 				<ShowGridSwitch />
 				<ShowLegendSwitch />

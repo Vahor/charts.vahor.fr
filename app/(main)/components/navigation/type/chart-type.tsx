@@ -42,9 +42,14 @@ export const ChartTypeDropdown: React.FC = () => {
 	const activeChartType = useChartStore((state) => state.chartType);
 	const setChartType = useChartStore((state) => state.setChartType);
 	return (
-		<NavigationItem title="Chart type">
+		<NavigationItem title="Chart type" id="chart-type">
 			<Select value={activeChartType} onValueChange={setChartType}>
-				<SelectTrigger className="w-[60px]" icon={ChevronUpIcon}>
+				<SelectTrigger
+					className="w-[60px]"
+					icon={ChevronUpIcon}
+					id="chart-type"
+					aria-labelledby="chart-type-label"
+				>
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>

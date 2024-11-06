@@ -14,6 +14,7 @@ export const ShowHeaderSwitch: React.FC = () => {
 				checked={showHeader}
 				onCheckedChange={setShowHeader}
 				id="show-header"
+				aria-labelledby="show-header-label"
 			/>
 		</NavigationItem>
 	);

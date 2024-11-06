@@ -14,6 +14,7 @@ export const ShowLabelSwitch: React.FC = () => {
 				checked={showLabel}
 				onCheckedChange={setShowLabel}
 				id="show-label"
+				aria-labelledby="show-label-label"
 			/>
 		</NavigationItem>
 	);

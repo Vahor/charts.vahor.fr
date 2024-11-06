@@ -10,7 +10,12 @@ export const ShowDotsSwitch: React.FC = () => {
 
 	return (
 		<NavigationItem title="Show dots" id="show-dots">
-			<Switch checked={showDots} onCheckedChange={setShowDots} id="show-dots" />
+			<Switch
+				checked={showDots}
+				onCheckedChange={setShowDots}
+				id="show-dots"
+				aria-labelledby="show-dots-label"
+			/>
 		</NavigationItem>
 	);
 };

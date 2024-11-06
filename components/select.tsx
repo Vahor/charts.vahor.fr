@@ -26,8 +26,8 @@ export interface SelectTriggerProps
 const SelectTrigger = React.forwardRef<
 	React.ElementRef<typeof SelectPrimitive.Trigger>,
 	SelectTriggerProps
->(({ className, children, ...props }, ref) => {
-	const IconComponent = props.icon ?? CaretSortIcon;
+>(({ className, children, icon, ...props }, ref) => {
+	const IconComponent = icon ?? CaretSortIcon;
 	return (
 		<SelectPrimitive.Trigger
 			ref={ref}
