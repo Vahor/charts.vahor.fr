@@ -28,6 +28,8 @@ export function BarChart() {
 	const showLabel = useChartStore((state) => state.showLabel);
 	const showXAxisLabel = useChartStore((state) => state.showXAxisLabel);
 	const showYAxisLabel = useChartStore((state) => state.showYAxisLabel);
+	const customMaxY = useChartStore((state) => state.customMaxY);
+	const customMinY = useChartStore((state) => state.customMinY);
 
 	const chartData = useChartStore((state) => state.chartData);
 	const chartDataPath = useChartStore((state) => state.chartDataPath);
@@ -53,7 +55,7 @@ export function BarChart() {
 						tickLine={false}
 						axisLine={false}
 						tickMargin={8}
-						domain={["dataMin - 5", "dataMax + 5"]}
+						domain={[customMinY ?? "dataMin - 5", customMaxY ?? "dataMax + 5"]}
 						allowDataOverflow={true}
 					/>
 				)}

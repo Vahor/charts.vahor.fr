@@ -66,6 +66,12 @@ export type ChartStore = {
 	showYAxisLabel: boolean;
 	setShowYAxisLabel: (yAxisLabel: ChartStore["showYAxisLabel"]) => void;
 
+	customMinY: number | undefined;
+	setCustomMinY: (customMinY: ChartStore["customMinY"]) => void;
+
+	customMaxY: number | undefined;
+	setCustomMaxY: (customMaxY: ChartStore["customMaxY"]) => void;
+
 	chartTitle: string;
 	setChartTitle: (chartTitle: ChartStore["chartTitle"]) => void;
 	chartDescription: string;
@@ -282,6 +288,12 @@ export const useChartStore = create<ChartStore>()(
 
 				showYAxisLabel: true,
 				setShowYAxisLabel: (yAxisLabel) => set({ showYAxisLabel: yAxisLabel }),
+
+				customMinY: undefined,
+				setCustomMinY: (customMinY) => set({ customMinY }),
+
+				customMaxY: undefined,
+				setCustomMaxY: (customMaxY) => set({ customMaxY }),
 
 				chartTitle: "",
 				setChartTitle: (chartTitle) => set({ chartTitle: chartTitle }),

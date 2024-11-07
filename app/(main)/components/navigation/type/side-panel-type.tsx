@@ -6,6 +6,8 @@ import { ShowLegendSwitch } from "@/app/(main)/components/navigation/type/show-l
 
 import { useChartStore } from "@/app/(main)/chart.store";
 import { NavigationGroup } from "@/app/(main)/components/navigation/navigation-group";
+import { CustomMaxYInput } from "@/app/(main)/components/navigation/type/custom-max-y-input";
+import { CustomMinYInput } from "@/app/(main)/components/navigation/type/custom-min-y-input";
 import { LineChartCurveType } from "@/app/(main)/components/navigation/type/line-chart-curve-type";
 import { ShowDotsSwitch } from "@/app/(main)/components/navigation/type/show-dots-switch";
 import { ShowFooterSwitch } from "@/app/(main)/components/navigation/type/show-footer-switch";
@@ -27,6 +29,8 @@ export const SidePanelType: React.FC = () => {
 				<ShowLabelSwitch />
 				<YAxisLabelSwitch />
 				<XAxisLabelSwitch />
+				<CustomMinYInput />
+				<CustomMaxYInput />
 				{(chartType === "line" || chartType === "area") && <ShowDotsSwitch />}
 				{chartType === "line" && <LineChartCurveType />}
 			</NavigationGroup>
